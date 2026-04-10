@@ -51,6 +51,7 @@ jobs:
         working-directory: ./lib/rain.interpreter
 
       - run: nix develop -c rainix-sol-prelude
+      - run: nix develop -c rain-dia-prelude
 
       - run: nix develop -c rainix-sol-artifacts
         env:
