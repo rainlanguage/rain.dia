@@ -4,9 +4,20 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
 import {LibDia, IDIAOracleV2, UnsupportedChainId} from "src/lib/dia/LibDia.sol";
-import {LibIntOrAString, IntOrAString} from "rain.intorastring/lib/LibIntOrAString.sol";
+import {IntOrAString} from "rain.intorastring/lib/LibIntOrAString.sol";
 import {Float, LibDecimalFloat} from "rain.math.float/lib/LibDecimalFloat.sol";
 import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE, DIA_BTC_USD_TIMESTAMP} from "test/lib/LibFork.sol";
+
+/// @dev Create a V3-encoded IntOrAString matching the latest Rain parser output.
+/// Layout: string data right-aligned above the low byte, low byte = 0xE0 | length.
+function fromStringV3(string memory s) pure returns (IntOrAString intOrAString) {
+    assembly ("memory-safe") {
+        let length := and(mload(s), 0x1f)
+        mstore(0, or(0xe0, length))
+        mcopy(sub(0x20, add(length, 1)), add(s, 0x20), length)
+        intOrAString := mload(0)
+    }
+}
 
 contract LibDiaGetOracleContractExternalWrapper {
     function getOracleContract(uint256 chainId) external pure returns (IDIAOracleV2) {
@@ -27,14 +38,27 @@ contract LibDiaGetOracleContractTest is Test {
     }
 }
 
+contract LibDiaStringV3Test is Test {
+    function testRoundTrip() external pure {
+        IntOrAString encoded = fromStringV3("BTC/USD");
+        string memory decoded = LibDia.intOrAStringToString(encoded);
+        assertEq(decoded, "BTC/USD");
+    }
+
+    function testRoundTripETH() external pure {
+        IntOrAString encoded = fromStringV3("ETH/USD");
+        string memory decoded = LibDia.intOrAStringToString(encoded);
+        assertEq(decoded, "ETH/USD");
+    }
+}
+
 contract LibDiaGetPriceTest is Test {
     function testGetPriceBtcUsd() external {
         vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
         vm.chainId(8453);
-        // Warp to shortly after the DIA update so staleness check passes.
         vm.warp(DIA_BTC_USD_TIMESTAMP + 60);
 
-        IntOrAString key = LibIntOrAString.fromString2("BTC/USD");
+        IntOrAString key = fromStringV3("BTC/USD");
         Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
 
         (Float price, Float updatedAt) = LibDia.getPriceNoOlderThan(key, staleAfter);
@@ -42,8 +66,6 @@ contract LibDiaGetPriceTest is Test {
         assertTrue(Float.unwrap(price) != 0, "price should be non-zero");
         assertTrue(Float.unwrap(updatedAt) != 0, "timestamp should be non-zero");
 
-        // BTC/USD = 7568457939217 with 8 decimals = $75,684.57939217
-        // Verify price is in a sane range (packLossless with -8 exponent).
         assertEq(
             Float.unwrap(price),
             Float.unwrap(LibDecimalFloat.packLossless(int256(uint256(7568457939217)), -8)),
