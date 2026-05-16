@@ -52,5 +52,6 @@ pre-commit install
 pre-commit run --all-files
 ```
 
-Requires `forge` on `PATH` for Solidity formatting. Nix users can use
-`nix develop` for the same tools without replacing the config file.
+Solidity formatting runs when `forge` is on `PATH` (e.g. inside `nix develop`);
+otherwise the hook is skipped so IDE commits still work. Run
+`nix develop -c forge fmt` before committing `.sol` changes if needed.

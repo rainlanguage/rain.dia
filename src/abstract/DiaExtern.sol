@@ -25,13 +25,9 @@ abstract contract DiaExtern is BaseRainterpreterExternNPE2 {
     }
 
     function buildOpcodeFunctionPointers() external pure returns (bytes memory) {
-        function(OperandV2, StackItem[] memory)
-            internal
-            view
-            returns (StackItem[] memory)[] memory fs = new function(OperandV2, StackItem[] memory)
-                internal
-                view
-                returns (StackItem[] memory)[](OPCODE_FUNCTION_POINTERS_LENGTH);
+        function(OperandV2, StackItem[] memory) internal view returns (StackItem[] memory)[] memory fs = new function(OperandV2, StackItem[] memory)
+        internal
+        view returns (StackItem[] memory)[](OPCODE_FUNCTION_POINTERS_LENGTH);
         fs[OPCODE_DIA_PRICE] = LibOpDiaPrice.run;
 
         uint256[] memory pointers;
@@ -42,13 +38,9 @@ abstract contract DiaExtern is BaseRainterpreterExternNPE2 {
     }
 
     function buildIntegrityFunctionPointers() external pure returns (bytes memory) {
-        function(OperandV2, uint256, uint256)
-            internal
-            pure
-            returns (uint256, uint256)[] memory fs = new function(OperandV2, uint256, uint256)
-                internal
-                pure
-                returns (uint256, uint256)[](OPCODE_FUNCTION_POINTERS_LENGTH);
+        function(OperandV2, uint256, uint256) internal pure returns (uint256, uint256)[] memory fs = new function(OperandV2, uint256, uint256)
+        internal
+        pure returns (uint256, uint256)[](OPCODE_FUNCTION_POINTERS_LENGTH);
         fs[OPCODE_DIA_PRICE] = LibOpDiaPrice.integrity;
 
         uint256[] memory pointers;

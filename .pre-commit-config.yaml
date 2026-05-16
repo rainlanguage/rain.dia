@@ -27,7 +27,8 @@ repos:
     hooks:
       - id: forge-fmt
         name: forge fmt
-        entry: forge fmt
+        # Skip when forge is not on PATH (e.g. IDE Git); run via nix develop for enforcement.
+        entry: bash -c 'command -v forge >/dev/null 2>&1 || exit 0; exec forge fmt'
         language: system
         files: \.sol$
         pass_filenames: false

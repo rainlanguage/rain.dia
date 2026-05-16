@@ -39,10 +39,8 @@ abstract contract DiaSubParser is BaseRainterpreterSubParserNPE2 {
     }
 
     function buildOperandHandlerFunctionPointers() external pure returns (bytes memory) {
-        function(bytes32[] memory) internal pure returns (OperandV2)[] memory fs = new function(bytes32[] memory)
-                internal
-                pure
-                returns (OperandV2)[](SUB_PARSER_WORD_PARSERS_LENGTH);
+        function(bytes32[] memory) internal pure returns (OperandV2)[] memory fs =
+            new function(bytes32[] memory) internal pure returns (OperandV2)[](SUB_PARSER_WORD_PARSERS_LENGTH);
         fs[SUB_PARSER_WORD_DIA_PRICE] = LibParseOperand.handleOperandDisallowed;
 
         uint256[] memory pointers;
@@ -57,13 +55,9 @@ abstract contract DiaSubParser is BaseRainterpreterSubParserNPE2 {
     }
 
     function buildSubParserWordParsers() external pure returns (bytes memory) {
-        function(uint256, uint256, OperandV2)
-            internal
-            view
-            returns (bool, bytes memory, bytes32[] memory)[] memory fs = new function(uint256, uint256, OperandV2)
-                internal
-                view
-                returns (bool, bytes memory, bytes32[] memory)[](SUB_PARSER_WORD_PARSERS_LENGTH);
+        function(uint256, uint256, OperandV2) internal view returns (bool, bytes memory, bytes32[] memory)[] memory fs = new function(uint256, uint256, OperandV2)
+        internal
+        view returns (bool, bytes memory, bytes32[] memory)[](SUB_PARSER_WORD_PARSERS_LENGTH);
         fs[SUB_PARSER_WORD_DIA_PRICE] = diaPriceSubParser;
 
         uint256[] memory pointers;
@@ -80,8 +74,9 @@ abstract contract DiaSubParser is BaseRainterpreterSubParserNPE2 {
         returns (bool, bytes memory, bytes32[] memory)
     {
         // slither-disable-next-line unused-return
-        return LibSubParse.subParserExtern(
-            IInterpreterExternV4(extern()), constantsHeight, ioByte, operand, OPCODE_DIA_PRICE
-        );
+        return
+            LibSubParse.subParserExtern(
+                IInterpreterExternV4(extern()), constantsHeight, ioByte, operand, OPCODE_DIA_PRICE
+            );
     }
 }
