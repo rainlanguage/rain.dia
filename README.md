@@ -40,3 +40,17 @@ forge test
 # Regenerate pointers
 forge script script/BuildPointers.sol
 ```
+
+### Pre-commit
+
+Git hooks use the committed `.pre-commit-config.yaml` (not Nix store symlinks).
+Install once, then hooks run on `git commit`:
+
+```sh
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
+Requires `forge` on `PATH` for Solidity formatting. Nix users can use
+`nix develop` for the same tools without replacing the config file.

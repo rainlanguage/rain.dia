@@ -1,1 +1,33 @@
-/nix/store/8yg5imq6129bmlig7y659qv0q72irz2b-pre-commit-config.json
+# Portable pre-commit config (no Nix store paths).
+# Install: pip install pre-commit && pre-commit install
+# Or with tools on PATH: pre-commit run --all-files
+
+default_language_version:
+  python: python3
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        types_or: [markdown, yaml, json]
+
+  - repo: local
+    hooks:
+      - id: forge-fmt
+        name: forge fmt
+        entry: forge fmt
+        language: system
+        files: \.sol$
+        pass_filenames: false
