@@ -12,18 +12,17 @@ error ZeroDiaPrice(string key);
 
 /// @title LibDia
 /// @notice Core library for interacting with DIA oracle V2 on-chain.
-/// DIA keys are simple strings like "BTC/USD", "ETH/USD", etc.
+/// DIA keys are ticker strings like "AMZN", "NVDA", etc.
 /// The string is passed through directly from the Rain expression.
-/// DIA prices have 8 decimals.
+/// DIA prices have 18 decimals.
 library LibDia {
     uint256 constant CHAIN_ID_BASE = 8453;
 
     /// @dev DIA oracle V2 contract on Base.
-    /// https://docs.diadata.org/products/token-price-feeds/access-the-oracle
-    IDIAOracleV2 constant ORACLE_BASE = IDIAOracleV2(0xB8BF9ba432282F25F56e143641145349ab7c5Bf6);
+    IDIAOracleV2 constant ORACLE_BASE = IDIAOracleV2(0xCE521b52513242c5094bc56f57887BB2A05B8129);
 
-    /// @dev DIA prices have 8 decimal places.
-    int256 constant DIA_DECIMALS = -8;
+    /// @dev DIA prices have 18 decimal places.
+    int256 constant DIA_DECIMALS = -18;
 
     /// @dev Mask for the 5 bit length from V3 IntOrAString.
     uint256 constant LENGTH_MASK_V3 = 0x1f;
@@ -58,10 +57,10 @@ library LibDia {
 
     /// @notice Fetches a price from the DIA oracle and reverts if the price is
     /// stale or zero. The key is passed through as a string directly from the
-    /// Rain expression, e.g. "BTC/USD".
+    /// Rain expression, e.g. "AMZN".
     /// @param feedKey The V3 IntOrAString key for the DIA feed.
     /// @param staleAfter The maximum age of the price in seconds as a Float.
-    /// @return price The price as a Float with 8 decimal places.
+    /// @return price The price as a Float with 18 decimal places.
     /// @return updatedAt The timestamp of the price update as a Float (seconds).
     function getPriceNoOlderThan(IntOrAString feedKey, Float staleAfter)
         internal

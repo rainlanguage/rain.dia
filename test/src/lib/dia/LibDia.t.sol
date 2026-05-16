@@ -6,7 +6,7 @@ import {Test} from "forge-std/Test.sol";
 import {LibDia, IDIAOracleV2, UnsupportedChainId} from "src/lib/dia/LibDia.sol";
 import {IntOrAString} from "rain.intorastring/lib/LibIntOrAString.sol";
 import {Float, LibDecimalFloat} from "rain.math.float/lib/LibDecimalFloat.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE, DIA_BTC_USD_TIMESTAMP} from "test/lib/LibFork.sol";
+import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "test/lib/LibFork.sol";
 
 /// @dev Create a V3-encoded IntOrAString matching the latest Rain parser output.
 /// Layout: string data right-aligned above the low byte, low byte = 0xE0 | length.
@@ -40,36 +40,56 @@ contract LibDiaGetOracleContractTest is Test {
 
 contract LibDiaStringV3Test is Test {
     function testRoundTrip() external pure {
-        IntOrAString encoded = fromStringV3("BTC/USD");
+        IntOrAString encoded = fromStringV3("AMZN");
         string memory decoded = LibDia.intOrAStringToString(encoded);
-        assertEq(decoded, "BTC/USD");
+        assertEq(decoded, "AMZN");
     }
 
-    function testRoundTripETH() external pure {
-        IntOrAString encoded = fromStringV3("ETH/USD");
+    function testRoundTripNVDA() external pure {
+        IntOrAString encoded = fromStringV3("NVDA");
         string memory decoded = LibDia.intOrAStringToString(encoded);
-        assertEq(decoded, "ETH/USD");
+        assertEq(decoded, "NVDA");
     }
 }
 
 contract LibDiaGetPriceTest is Test {
-    function testGetPriceBtcUsd() external {
+    function setUp() external {
         vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
         vm.chainId(8453);
-        vm.warp(DIA_BTC_USD_TIMESTAMP + 60);
+    }
 
-        IntOrAString key = fromStringV3("BTC/USD");
+    function _assertFeedPrice(string memory symbol, uint256 rawPrice) internal view {
+        IntOrAString key = fromStringV3(symbol);
         Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
 
         (Float price, Float updatedAt) = LibDia.getPriceNoOlderThan(key, staleAfter);
 
         assertTrue(Float.unwrap(price) != 0, "price should be non-zero");
         assertTrue(Float.unwrap(updatedAt) != 0, "timestamp should be non-zero");
-
         assertEq(
             Float.unwrap(price),
-            Float.unwrap(LibDecimalFloat.packLossless(int256(uint256(7568457939217)), -8)),
-            "unexpected BTC price"
+            Float.unwrap(LibDecimalFloat.packLossless(int256(rawPrice), -18)),
+            string.concat("unexpected ", symbol, " price")
         );
+    }
+
+    function testGetPriceAmzn() external {
+        _assertFeedPrice("AMZN", 264100000000000022736);
+    }
+
+    function testGetPriceNvda() external {
+        _assertFeedPrice("NVDA", 225389999999999986352);
+    }
+
+    function testGetPriceCoin() external {
+        _assertFeedPrice("COIN", 195539999999999992048);
+    }
+
+    function testGetPriceMstr() external {
+        _assertFeedPrice("MSTR", 177455000000000012512);
+    }
+
+    function testGetPriceTsla() external {
+        _assertFeedPrice("TSLA", 422350000000000022752);
     }
 }

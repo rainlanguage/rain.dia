@@ -5,7 +5,7 @@ pragma solidity =0.8.25;
 import {Test} from "forge-std/Test.sol";
 import {LibOpDiaPrice, OperandV2, StackItem} from "src/lib/op/LibOpDiaPrice.sol";
 import {IntOrAString} from "rain.intorastring/lib/LibIntOrAString.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE, DIA_BTC_USD_TIMESTAMP} from "test/lib/LibFork.sol";
+import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "test/lib/LibFork.sol";
 import {Float, LibDecimalFloat} from "rain.math.float/lib/LibDecimalFloat.sol";
 
 function fromStringV3(string memory s) pure returns (IntOrAString intOrAString) {
@@ -27,10 +27,9 @@ contract LibOpDiaPriceTest is Test {
     function testRunForkCurrentPriceHappy() external {
         vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
         vm.chainId(8453);
-        vm.warp(DIA_BTC_USD_TIMESTAMP + 60);
 
         StackItem[] memory inputs = new StackItem[](2);
-        inputs[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(fromStringV3("BTC/USD"))));
+        inputs[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(fromStringV3("AMZN"))));
         inputs[1] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(3600, 0)));
 
         StackItem[] memory outputs = LibOpDiaPrice.run(OperandV2.wrap(0), inputs);

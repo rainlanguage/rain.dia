@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
 import {DiaWords} from "src/concrete/DiaWords.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE, DIA_BTC_USD_TIMESTAMP} from "test/lib/LibFork.sol";
+import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "test/lib/LibFork.sol";
 import {LibDia} from "src/lib/dia/LibDia.sol";
 import {LibDecimalFloat, Float} from "rain.math.float/lib/LibDecimalFloat.sol";
 import {IntOrAString} from "rain.intorastring/lib/LibIntOrAString.sol";
@@ -28,12 +28,11 @@ contract DiaWordsDiaPriceTest is Test {
     function testDiaWordsExternDispatch() external {
         vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
         vm.chainId(LibDia.CHAIN_ID_BASE);
-        vm.warp(DIA_BTC_USD_TIMESTAMP + 60);
 
         DiaWords diaWords = new DiaWords();
 
         StackItem[] memory inputs = new StackItem[](2);
-        inputs[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(fromStringV3("BTC/USD"))));
+        inputs[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(fromStringV3("AMZN"))));
         inputs[1] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(3600, 0)));
 
         StackItem[] memory outputs = LibOpDiaPrice.run(OperandV2.wrap(0), inputs);
