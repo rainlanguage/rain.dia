@@ -4,6 +4,8 @@ version = 1
 path = [
     ".gas-snapshot",
     ".github/workflows/**/",
+    ".pre-commit-config.yaml",
+    "script/**/",
     "meta/**/",
     ".gitignore",
     ".gitmodules",

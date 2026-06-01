@@ -14,6 +14,13 @@
       in rec
       {
         packages = {
+          rainix-sol-static = pkgs.writeShellScriptBin "rainix-sol-static" ''
+            set -euxo pipefail
+            bash "${self}/script/fix-libparse-slither.sh"
+            slither .
+            forge fmt --check
+          '';
+
           rain-dia-prelude = rainix.mkTask.${system} {
             name = "rain-dia-prelude";
             body = ''
@@ -35,6 +42,7 @@
 
         devShells.default = pkgs.mkShell {
           packages = [
+            packages.rainix-sol-static
             packages.rain-dia-prelude
             rain.defaultPackage.${system}
           ];
