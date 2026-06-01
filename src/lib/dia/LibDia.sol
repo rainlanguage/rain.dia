@@ -77,6 +77,7 @@ library LibDia {
             revert ZeroDiaPrice(key);
         }
 
+        //slither-disable-next-line timestamp
         if (block.timestamp - rawTimestamp > staleAfterUint) {
             revert StaleDiaPrice(rawTimestamp, staleAfterUint);
         }
