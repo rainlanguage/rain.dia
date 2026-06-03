@@ -13,6 +13,8 @@ path = [
     "foundry.toml",
     "slither.config.json",
     "REUSE.toml",
+    "remappings.txt",
+    "soldeer.lock",
     "foundry.lock",
 ]
 SPDX-FileCopyrightText = "Copyright (c) 2020 Rain Open Source Software Ltd"

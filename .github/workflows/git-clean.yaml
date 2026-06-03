@@ -1,15 +1,10 @@
 name: Git is clean
 on: [push]
-
 jobs:
   git-clean:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-
       - uses: nixbuild/nix-quick-install-action@v30
         with:
           nix_conf: |
@@ -18,22 +13,13 @@ jobs:
       - name: Restore and save Nix store
         uses: nix-community/cache-nix-action@v6
         with:
-          # restore and save a cache using this key
           primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
-          # if there's no cache hit, restore a cache by this prefix
           restore-prefixes-first-match: nix-${{ runner.os }}-
-          # collect garbage until the Nix store size (in bytes) is at most this number
-          # before trying to save a new cache
-          # 1G = 1073741824
           gc-max-store-size-linux: 1G
-
-      - run: nix develop -c rain-dia-prelude
-
-      - run: nix develop -c forge script ./script/BuildPointers.sol
-
-      # Format the repo after generating pointers so that the pointer files are
-      # formatted too.
-      - run: nix develop -c forge fmt
-
-      # Check if the repo is clean after generating pointers and formatting.
+      - name: Install soldeer dependencies
+        run: nix develop github:rainlanguage/rainix#sol-shell -c forge soldeer install
+      - name: Regenerate meta and pointers
+        run: nix develop -c rain-dia-prelude
+      - run: nix develop github:rainlanguage/rainix#sol-shell -c forge script ./script/BuildPointers.sol
+      - run: nix develop github:rainlanguage/rainix#sol-shell -c forge fmt
       - run: git diff --exit-code
