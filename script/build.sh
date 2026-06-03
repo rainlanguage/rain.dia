@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: LicenseRef-DCL-1.0
+# SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 # Regenerate committed meta artifacts (and fixtures) that the rainix
 # copy-artifacts reusable diff-checks. Runs in the repo default devshell
 # because `rain` (and node, where used) are not in rainix sol-shell.
