@@ -3,8 +3,8 @@
 pragma solidity ^0.8.25;
 
 import {IDIAOracleV2} from "./IDIAOracleV2.sol";
-import {LibDecimalFloat, Float} from "rain.math.float/lib/LibDecimalFloat.sol";
-import {IntOrAString} from "rain.intorastring/lib/LibIntOrAString.sol";
+import {LibDecimalFloat, Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
+import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 
 error UnsupportedChainId();
 error StaleDiaPrice(uint128 timestamp, uint256 staleAfter);
