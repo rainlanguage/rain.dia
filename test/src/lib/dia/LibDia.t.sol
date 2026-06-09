@@ -2,10 +2,10 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std/Test.sol";
+import {Test} from "forge-std-1.16.1/src/Test.sol";
 import {LibDia, IDIAOracleV2, UnsupportedChainId} from "src/lib/dia/LibDia.sol";
-import {IntOrAString} from "rain.intorastring/lib/LibIntOrAString.sol";
-import {Float, LibDecimalFloat} from "rain.math.float/lib/LibDecimalFloat.sol";
+import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
+import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "test/lib/LibFork.sol";
 
 /// @dev Create a V3-encoded IntOrAString matching the latest Rain parser output.

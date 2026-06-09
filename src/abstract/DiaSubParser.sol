@@ -3,12 +3,12 @@
 pragma solidity ^0.8.25;
 
 import {OPCODE_DIA_PRICE} from "./DiaExtern.sol";
-import {OperandV2, BaseRainterpreterSubParserNPE2} from "rain.interpreter/abstract/BaseRainterpreterSubParserNPE2.sol";
-import {LibParseOperand} from "rain.interpreter/lib/parse/LibParseOperand.sol";
+import {OperandV2, BaseRainlangSubParser} from "rainlang-0.1.2/src/abstract/BaseRainlangSubParser.sol";
+import {LibParseOperand} from "rainlang-0.1.2/src/lib/parse/LibParseOperand.sol";
 import {SUB_PARSER_WORD_PARSERS_LENGTH, SUB_PARSER_WORD_DIA_PRICE} from "../lib/parse/LibDiaSubParser.sol";
-import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
-import {LibSubParse} from "rain.interpreter/lib/parse/LibSubParse.sol";
-import {IInterpreterExternV4} from "rain.interpreter.interface/interface/unstable/IInterpreterExternV4.sol";
+import {LibConvert} from "rain-lib-typecast-0.1.0/src/LibConvert.sol";
+import {LibSubParse} from "rainlang-0.1.2/src/lib/parse/LibSubParse.sol";
+import {IInterpreterExternV4} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterExternV4.sol";
 import {
     OPERAND_HANDLER_FUNCTION_POINTERS as SUB_PARSER_OPERAND_HANDLERS,
     PARSE_META as SUB_PARSER_PARSE_META,
@@ -17,23 +17,23 @@ import {
 
 uint8 constant PARSE_META_BUILD_DEPTH = 1;
 
-abstract contract DiaSubParser is BaseRainterpreterSubParserNPE2 {
+abstract contract DiaSubParser is BaseRainlangSubParser {
     // slither-disable-next-line dead-code
     function extern() internal view virtual returns (address) {
         return address(this);
     }
 
-    /// @inheritdoc BaseRainterpreterSubParserNPE2
+    /// @inheritdoc BaseRainlangSubParser
     function subParserParseMeta() internal pure override returns (bytes memory) {
         return SUB_PARSER_PARSE_META;
     }
 
-    /// @inheritdoc BaseRainterpreterSubParserNPE2
+    /// @inheritdoc BaseRainlangSubParser
     function subParserWordParsers() internal pure override returns (bytes memory) {
         return SUB_PARSER_WORD_PARSERS;
     }
 
-    /// @inheritdoc BaseRainterpreterSubParserNPE2
+    /// @inheritdoc BaseRainlangSubParser
     function subParserOperandHandlers() internal pure override returns (bytes memory) {
         return SUB_PARSER_OPERAND_HANDLERS;
     }

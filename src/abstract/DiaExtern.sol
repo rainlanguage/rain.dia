@@ -2,20 +2,16 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity ^0.8.25;
 
-import {
-    BaseRainterpreterExternNPE2,
-    OperandV2,
-    StackItem
-} from "rain.interpreter/abstract/BaseRainterpreterExternNPE2.sol";
+import {BaseRainlangExtern, OperandV2, StackItem} from "rainlang-0.1.2/src/abstract/BaseRainlangExtern.sol";
 import {LibOpDiaPrice} from "../lib/op/LibOpDiaPrice.sol";
-import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
+import {LibConvert} from "rain-lib-typecast-0.1.0/src/LibConvert.sol";
 import {OPCODE_FUNCTION_POINTERS, INTEGRITY_FUNCTION_POINTERS} from "../generated/DiaWords.pointers.sol";
 
 uint256 constant OPCODE_DIA_PRICE = 0;
 
 uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 1;
 
-abstract contract DiaExtern is BaseRainterpreterExternNPE2 {
+abstract contract DiaExtern is BaseRainlangExtern {
     function opcodeFunctionPointers() internal pure override returns (bytes memory) {
         return OPCODE_FUNCTION_POINTERS;
     }
