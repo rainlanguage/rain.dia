@@ -25,8 +25,7 @@ contract LibDiaGetPriceTest is Test {
     function _assertFeedPrice(string memory symbol, uint256 rawPrice) internal view {
         Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
 
-        (Float price, Float updatedAt) =
-            LibDia.getPriceNoOlderThan(LibFromStringV3.fromStringV3(symbol), staleAfter);
+        (Float price, Float updatedAt) = LibDia.getPriceNoOlderThan(LibFromStringV3.fromStringV3(symbol), staleAfter);
 
         assertTrue(Float.unwrap(price) != 0, "price should be non-zero");
         assertTrue(Float.unwrap(updatedAt) != 0, "timestamp should be non-zero");
