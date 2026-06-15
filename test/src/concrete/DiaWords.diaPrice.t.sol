@@ -9,15 +9,7 @@ import {LibDia} from "src/lib/dia/LibDia.sol";
 import {LibDecimalFloat, Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 import {LibOpDiaPrice, OperandV2, StackItem} from "src/lib/op/LibOpDiaPrice.sol";
-
-function fromStringV3(string memory s) pure returns (IntOrAString intOrAString) {
-    assembly ("memory-safe") {
-        let length := and(mload(s), 0x1f)
-        mstore(0, or(0xe0, length))
-        mcopy(sub(0x20, add(length, 1)), add(s, 0x20), length)
-        intOrAString := mload(0)
-    }
-}
+import {LibFromStringV3} from "test/lib/LibFromStringV3.sol";
 
 /// @notice Tests DiaWords extern dispatch directly (bypassing the parser).
 /// The integration test with checkHappy/OpTest is not possible because the
@@ -32,7 +24,7 @@ contract DiaWordsDiaPriceTest is Test {
         DiaWords diaWords = new DiaWords();
 
         StackItem[] memory inputs = new StackItem[](2);
-        inputs[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(fromStringV3("AMZN"))));
+        inputs[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(LibFromStringV3.fromStringV3("AMZN"))));
         inputs[1] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(3600, 0)));
 
         StackItem[] memory outputs = LibOpDiaPrice.run(OperandV2.wrap(0), inputs);
