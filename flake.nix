@@ -27,6 +27,7 @@
               set -euxo pipefail
               ./script/build.sh
             '';
+            additionalBuildInputs = rainix.sol-build-inputs.${system} ++ [ rain.defaultPackage.${system} ];
           };
         }
         // rainix.packages.${system};
