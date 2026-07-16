@@ -9,6 +9,8 @@ import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol"
 error UnsupportedChainId();
 error StaleDiaPrice(uint128 timestamp, uint256 staleAfter);
 error ZeroDiaPrice(string key);
+error InvalidDiaString(uint256 value);
+error InvalidDiaTimestamp(uint128 timestamp);
 
 /// @title LibDia
 /// @notice Core library for interacting with DIA oracle V2 on-chain.
@@ -41,6 +43,11 @@ library LibDia {
     /// @param intOrAString The V3 IntOrAString value from the Rain stack.
     /// @return s The decoded string.
     function intOrAStringToString(IntOrAString intOrAString) internal pure returns (string memory s) {
+        uint256 value = IntOrAString.unwrap(intOrAString);
+        if (value & 0xe0 != 0xe0) {
+            revert InvalidDiaString(value);
+        }
+
         uint256 lengthMask = LENGTH_MASK_V3;
         assembly ("memory-safe") {
             let length := and(intOrAString, lengthMask)
@@ -73,12 +80,16 @@ library LibDia {
 
         (uint128 rawPrice, uint128 rawTimestamp) = oracle.getValue(key);
 
-        if (rawPrice == 0 && rawTimestamp == 0) {
+        if (rawPrice == 0) {
             revert ZeroDiaPrice(key);
         }
 
+        if (rawTimestamp == 0 || rawTimestamp > block.timestamp) {
+            revert InvalidDiaTimestamp(rawTimestamp);
+        }
+
         //slither-disable-next-line timestamp
-        if (block.timestamp - rawTimestamp > staleAfterUint) {
+        if (block.timestamp - rawTimestamp >= staleAfterUint) {
             revert StaleDiaPrice(rawTimestamp, staleAfterUint);
         }
 
