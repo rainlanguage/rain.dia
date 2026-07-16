@@ -12,21 +12,21 @@ import {
 } from "../../../../src/lib/dia/LibDia.sol";
 import {IDIAOracleV2} from "../../../../src/lib/dia/IDIAOracleV2.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "../../../lib/LibFork.sol";
+import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../../lib/LibFork.sol";
 import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 
 /// @dev Hardcoded prices are pinned to a Base fork snapshot (see comments on each test).
 /// Oracle: 0xCE521b52513242c5094bc56f57887BB2A05B8129 (LibDia.ORACLE_BASE).
-/// Fork block: 46061133 (block.timestamp 1778911613, 2026-05-16 06:06:53 UTC).
+/// Fork block: `FORK_BLOCK_BASE` in `test/lib/LibFork.sol` (47365950 at time of pin).
 /// Reproduce: cast call 0xCE521b52513242c5094bc56f57887BB2A05B8129
-/// "getValue(string)(uint128,uint128)" SYMBOL --rpc-url https://mainnet.base.org --block 46061133
-/// When changing FORK_BLOCK_BASE in test/lib/LibFork.sol, re-run that command per symbol and
-/// update the raw uint128 price literals below (first return value; 18 decimals).
+/// "getValue(string)(uint128,uint128)" SYMBOL --rpc-url $BASE_RPC_URL --block $FORK_BLOCK_BASE
+/// When changing `FORK_BLOCK_BASE`, re-run that command per symbol and update the raw
+/// uint128 price literals below (first return value; 18 decimals).
 contract LibDiaGetPriceTest is Test {
     function setUp() external {
-        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
-        vm.chainId(8453);
+        vm.createSelectFork(forkRpcUrlBase(vm), FORK_BLOCK_BASE);
+        vm.chainId(LibDia.CHAIN_ID_BASE);
     }
 
     /// @dev Asserts getValue(key) raw price at the fork block matches `rawPrice` (18-decimal uint128).
@@ -66,29 +66,29 @@ contract LibDiaGetPriceTest is Test {
         );
     }
 
-    /// raw price 264100000000000022736 (~$264.10); update timestamp 1778908932 at fork block.
-    function testGetPriceAmzn() external {
-        _assertFeedPrice("AMZN", 264100000000000022736);
+    /// raw price 238650000000000005680 (~$238.65); update timestamp at fork block.
+    function testGetPriceAmzn() external view {
+        _assertFeedPrice("AMZN", 238650000000000005680);
     }
 
-    /// raw price 225389999999999986352 (~$225.39); update timestamp 1778908933 at fork block.
-    function testGetPriceNvda() external {
-        _assertFeedPrice("NVDA", 225389999999999986352);
+    /// raw price 208969999999999998864 (~$208.97); update timestamp at fork block.
+    function testGetPriceNvda() external view {
+        _assertFeedPrice("NVDA", 208969999999999998864);
     }
 
-    /// raw price 195539999999999992048 (~$195.54); update timestamp 1778908934 at fork block.
-    function testGetPriceCoin() external {
-        _assertFeedPrice("COIN", 195539999999999992048);
+    /// raw price 159810000000000002272 (~$159.81); update timestamp at fork block.
+    function testGetPriceCoin() external view {
+        _assertFeedPrice("COIN", 159810000000000002272);
     }
 
-    /// raw price 177455000000000012512 (~$177.46); update timestamp 1778908935 at fork block.
-    function testGetPriceMstr() external {
-        _assertFeedPrice("MSTR", 177455000000000012512);
+    /// raw price 124269999999999996024 (~$124.27); update timestamp at fork block.
+    function testGetPriceMstr() external view {
+        _assertFeedPrice("MSTR", 124269999999999996024);
     }
 
-    /// raw price 422350000000000022752 (~$422.35); update timestamp 1778908936 at fork block.
-    function testGetPriceTsla() external {
-        _assertFeedPrice("TSLA", 422350000000000022752);
+    /// raw price 405800000000000011360 (~$405.80); update timestamp at fork block.
+    function testGetPriceTsla() external view {
+        _assertFeedPrice("TSLA", 405800000000000011360);
     }
 
     function testStalePriceReverts() external {
