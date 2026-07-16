@@ -5,7 +5,8 @@
 set -euo pipefail
 
 if ! command -v forge >/dev/null 2>&1 || ! command -v rain >/dev/null 2>&1; then
-  exec nix develop -c ./script/build.sh
+  echo "error: forge and rain are required; run 'nix run .#rain-dia-prelude'" >&2
+  exit 127
 fi
 
 mkdir -p meta
