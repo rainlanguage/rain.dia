@@ -41,7 +41,8 @@ jobs:
       - name: Install soldeer dependencies
         if: hashFiles('soldeer.lock') != ''
         run: nix develop -c forge soldeer install
-      - run: nix develop -c rain-dia-prelude
+      - name: Regenerate meta and pointers
+        run: nix develop -c rain-dia-prelude
       - run: nix develop -c rainix-sol-artifacts
         env:
           DEPLOY_BROADCAST: '1'

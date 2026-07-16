@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {DiaWords} from "src/concrete/DiaWords.sol";
+import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 
 contract DiaWordsMetaTest is Test {
     function testDescribedByMetaMatchesCommittedMeta() external {
