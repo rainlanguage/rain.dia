@@ -3,9 +3,10 @@
 pragma solidity =0.8.25;
 
 import {OpTest} from "rainlang-0.1.2/test/abstract/OpTest.sol";
-import {DiaWords} from "src/concrete/DiaWords.sol";
-import {LibDia} from "src/lib/dia/LibDia.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "test/lib/LibFork.sol";
+import {DiaWords} from "../../../src/concrete/DiaWords.sol";
+import {LibDia} from "../../../src/lib/dia/LibDia.sol";
+import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../lib/LibFork.sol";
+import {LibFromStringV3} from "../../lib/LibFromStringV3.sol";
 import {StackItem} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterV4.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {Strings} from "@openzeppelin-contracts-5.6.1/utils/Strings.sol";
@@ -23,24 +24,26 @@ contract DiaWordsDiaPriceIntegrationTest is OpTest {
     /// Select the Base fork, then (re)etch the rainlang interpreter contracts
     /// onto the forked state so `OpTest`'s fixed addresses resolve there.
     function setUp() external {
-        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
+        vm.createSelectFork(forkRpcUrlBase(vm), FORK_BLOCK_BASE);
         vm.chainId(LibDia.CHAIN_ID_BASE);
         LibInterpreterDeploy.etchRainlang(vm);
     }
 
     /// Parse and eval `dia-price("AMZN" 3600)` against the pinned Base fork.
-    /// Expected values are the raw oracle returns at FORK_BLOCK_BASE (see
-    /// LibDiaGetPriceTest header for the cast command that reproduces them):
-    /// raw price 264100000000000022736 (18 decimals), update timestamp
-    /// 1778908932.
+    /// Expected stack values are derived from `LibDia.getPriceNoOlderThan` at
+    /// `FORK_BLOCK_BASE` so price and timestamp stay aligned with the fork pin.
     function testDiaWordsDiaPriceParseEvalHappy() external {
         DiaWords diaWords = new DiaWords();
+
+        (Float price, Float updatedAt) = LibDia.getPriceNoOlderThan(
+            LibFromStringV3.fromStringV3("AMZN"), LibDecimalFloat.packLossless(3600, 0)
+        );
 
         StackItem[] memory expectedStack = new StackItem[](2);
         // Stack index 0 is the top of the stack: the last output, i.e. the
         // update timestamp.
-        expectedStack[0] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(1778908932, 0)));
-        expectedStack[1] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(264100000000000022736, -18)));
+        expectedStack[0] = StackItem.wrap(Float.unwrap(updatedAt));
+        expectedStack[1] = StackItem.wrap(Float.unwrap(price));
 
         checkHappy(
             bytes(
