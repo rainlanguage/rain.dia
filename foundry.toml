@@ -5,8 +5,8 @@ solc = "0.8.25"
 
 
 fs_permissions = [
-    { access = "read-write", path = "src/generated" },
-    { access = "read-write", path = "meta" },
+  { access = "read-write", path = "src/generated" },
+  { access = "read-write", path = "meta" },
 ]
 
 evm_version = "cancun"
@@ -18,8 +18,10 @@ bytecode_hash = "none"
 cbor_metadata = false
 
 [dependencies]
+# Intentionally pinned soldeer revisions — bump only after running the full test suite.
 forge-std = "1.16.1"
 "@openzeppelin-contracts" = "5.6.1"
+# rainlang 0.1.2: parser emits V3 IntOrAString (see LibParseLiteralDiaKeyTest).
 rainlang = "0.1.2"
 "rain-interpreter-interface" = "0.1.0"
 "rain-metadata" = "0.1.0"
