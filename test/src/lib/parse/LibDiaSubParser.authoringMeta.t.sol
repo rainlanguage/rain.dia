@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
 import {AuthoringMetaV2} from "rain-interpreter-interface-0.1.0/src/interface/IParserV2.sol";
-import {LibDiaSubParser} from "src/lib/parse/LibDiaSubParser.sol";
+import {LibDiaSubParser} from "../../../../src/lib/parse/LibDiaSubParser.sol";
 
 contract LibDiaSubParserAuthoringMetaTest is Test {
     function testAuthoringMetaV2() external view {

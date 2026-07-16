@@ -37,9 +37,15 @@ forge build
 # Run tests (requires Base RPC)
 forge test
 
-# Regenerate pointers
-forge script script/BuildPointers.sol
+# Regenerate authoring meta, final contract meta, then generated pointers
+./script/build.sh
 ```
+
+`script/build.sh` is the canonical artifact pipeline. It enters the default Nix
+development shell when needed, writes
+`meta/DiaSubParserAuthoringMeta.rain.meta`, builds `meta/DiaWords.rain.meta`,
+and finally runs `script/Build.sol` so `src/generated/DiaWords.pointers.sol`
+hashes the final meta.
 
 ### Pre-commit
 

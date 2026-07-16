@@ -11,7 +11,7 @@ import {IIntegrityToolingV1} from "rain-sol-codegen-0.1.0/src/interface/IIntegri
 import {IOpcodeToolingV1} from "rain-sol-codegen-0.1.0/src/interface/IOpcodeToolingV1.sol";
 import {IParserToolingV1} from "rain-sol-codegen-0.1.0/src/interface/IParserToolingV1.sol";
 import {ISubParserToolingV1} from "rain-sol-codegen-0.1.0/src/interface/ISubParserToolingV1.sol";
-import {DiaWords} from "src/concrete/DiaWords.sol";
+import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 
 contract DiaWordsIERC165Test is Test {
     function testSupportsAdvertisedInterfaces() external {
