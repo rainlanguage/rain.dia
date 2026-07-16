@@ -14,26 +14,18 @@ contract LibDiaWordsDeployTest is Test {
 
     function testPinnedAddressMatchesZoltuDerivation() external pure {
         assertEq(
-            LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS,
-            LibDiaWordsDeploy.zoltuAddress(LibDiaWordsDeploy.creationCode())
+            LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS, LibDiaWordsDeploy.zoltuAddress(type(DiaWords).creationCode)
         );
     }
 
     function testPinnedCodehashMatchesRuntimeBytecode() external {
-        LibRainDeploy.deployZoltu(LibDiaWordsDeploy.creationCode());
-        assertEq(
-            LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS.codehash,
-            LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_CODEHASH
-        );
+        LibRainDeploy.deployZoltu(type(DiaWords).creationCode);
+        assertEq(LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS.codehash, LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_CODEHASH);
     }
 
     function testZoltuDeployMatchesPinnedRecord() external {
-        address deployed = LibRainDeploy.deployZoltu(LibDiaWordsDeploy.creationCode());
+        address deployed = LibRainDeploy.deployZoltu(type(DiaWords).creationCode);
         assertEq(deployed, LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS);
         assertEq(deployed.codehash, LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_CODEHASH);
-    }
-
-    function testCreationCodeMatchesCompiledContract() external pure {
-        assertEq(type(DiaWords).creationCode, LibDiaWordsDeploy.creationCode());
     }
 }
