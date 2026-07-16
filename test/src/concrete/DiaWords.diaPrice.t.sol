@@ -14,10 +14,8 @@ import {OperandV2, StackItem} from "rain-interpreter-interface-0.1.0/src/interfa
 import {LibExtern, ExternDispatchV2} from "rainlang-0.1.2/src/lib/extern/LibExtern.sol";
 
 /// @notice Tests DiaWords extern dispatch directly (bypassing the parser).
-/// The integration test with checkHappy/OpTest is not possible because the
-/// submodule's parser uses V2 IntOrAString encoding, while DiaWords expects
-/// V3 encoding (matching the latest on-chain deployer). This test verifies
-/// the extern contract works correctly with V3-encoded inputs.
+/// This verifies the extern contract works correctly with V3-encoded inputs.
+/// The full parse→eval path is covered by DiaWordsDiaPriceIntegrationTest.
 contract DiaWordsDiaPriceTest is Test {
     function testDiaWordsExternDispatch() external {
         vm.createSelectFork(forkRpcUrlBase(vm), FORK_BLOCK_BASE);
