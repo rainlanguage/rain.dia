@@ -21,12 +21,14 @@ contract Deploy is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        address deployed = LibRainDeploy.deployZoltu(LibDiaWordsDeploy.creationCode());
+        address deployed = LibRainDeploy.deployZoltu(type(DiaWords).creationCode);
         if (deployed != LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS) {
             revert LibRainDeploy.UnexpectedDeployedAddress(LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS, deployed);
         }
         if (deployed.codehash != LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_CODEHASH) {
-            revert LibRainDeploy.UnexpectedDeployedCodeHash(LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_CODEHASH, deployed.codehash);
+            revert LibRainDeploy.UnexpectedDeployedCodeHash(
+                LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_CODEHASH, deployed.codehash
+            );
         }
 
         DiaWords subParser = DiaWords(deployed);
