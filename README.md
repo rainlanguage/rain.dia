@@ -49,9 +49,10 @@ nix develop -c ./script/build.sh
 nix run .#rain-dia-prelude
 ```
 
-`script/build.sh` is the single implementation of the artifact pipeline and
-requires `forge` and `rain` on `PATH`. The Nix commands above provide both
-tools. The script writes `meta/DiaSubParserAuthoringMeta.rain.meta`, builds
+`script/build.sh` is the single implementation of the artifact pipeline. It uses
+the repo dev shell when `forge` and `rain` are not already on `PATH` (e.g.
+rainix copy-artifacts CI). The Nix commands above provide both tools. The script
+writes `meta/DiaSubParserAuthoringMeta.rain.meta`, builds
 `meta/DiaWords.rain.meta`, and finally runs `script/Build.sol` so
 `src/generated/DiaWords.pointers.sol` hashes the final meta.
 
