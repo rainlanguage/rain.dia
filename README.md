@@ -39,7 +39,7 @@ nix develop -c forge soldeer install
 # Build
 nix develop -c forge build
 
-# Run tests (requires Base RPC)
+# Run tests (requires Base RPC; set `BASE_RPC_URL` in CI)
 nix develop -c forge test
 
 # Regenerate authoring meta, final contract meta, then generated pointers

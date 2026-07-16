@@ -12,21 +12,21 @@ import {
 } from "../../../../src/lib/dia/LibDia.sol";
 import {IDIAOracleV2} from "../../../../src/lib/dia/IDIAOracleV2.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "../../../lib/LibFork.sol";
+import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../../lib/LibFork.sol";
 import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 
 /// @dev Hardcoded prices are pinned to a Base fork snapshot (see comments on each test).
 /// Oracle: 0xCE521b52513242c5094bc56f57887BB2A05B8129 (LibDia.ORACLE_BASE).
-/// Fork block: 46061133 (block.timestamp 1778911613, 2026-05-16 06:06:53 UTC).
+/// Fork block: `FORK_BLOCK_BASE` in `test/lib/LibFork.sol` (47365950 at time of pin).
 /// Reproduce: cast call 0xCE521b52513242c5094bc56f57887BB2A05B8129
-/// "getValue(string)(uint128,uint128)" SYMBOL --rpc-url https://mainnet.base.org --block 46061133
-/// When changing FORK_BLOCK_BASE in test/lib/LibFork.sol, re-run that command per symbol and
-/// update the raw uint128 price literals below (first return value; 18 decimals).
+/// "getValue(string)(uint128,uint128)" SYMBOL --rpc-url $BASE_RPC_URL --block $FORK_BLOCK_BASE
+/// When changing `FORK_BLOCK_BASE`, re-run that command per symbol and update the raw
+/// uint128 price literals below (first return value; 18 decimals).
 contract LibDiaGetPriceTest is Test {
     function setUp() external {
-        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
-        vm.chainId(8453);
+        vm.createSelectFork(forkRpcUrlBase(vm), FORK_BLOCK_BASE);
+        vm.chainId(LibDia.CHAIN_ID_BASE);
     }
 
     /// @dev Asserts getValue(key) raw price at the fork block matches `rawPrice` (18-decimal uint128).
@@ -69,11 +69,11 @@ contract LibDiaGetPriceTest is Test {
     function testGetPrices() external view {
         string[5] memory symbols = ["AMZN", "NVDA", "COIN", "MSTR", "TSLA"];
         uint256[5] memory rawPrices = [
-            uint256(264100000000000022736),
-            225389999999999986352,
-            195539999999999992048,
-            177455000000000012512,
-            422350000000000022752
+            uint256(238650000000000005680),
+            208969999999999998864,
+            159810000000000002272,
+            124269999999999996024,
+            405800000000000011360
         ];
 
         for (uint256 i = 0; i < symbols.length; i++) {
