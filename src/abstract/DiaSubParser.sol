@@ -2,10 +2,14 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity ^0.8.25;
 
-import {OPCODE_DIA_PRICE} from "./DiaExtern.sol";
+import {OPCODE_DIA_PRICE, OPCODE_DIA_PRICE_AFTER} from "./DiaExtern.sol";
 import {OperandV2, BaseRainlangSubParser} from "rainlang-0.1.2/src/abstract/BaseRainlangSubParser.sol";
 import {LibParseOperand} from "rainlang-0.1.2/src/lib/parse/LibParseOperand.sol";
-import {SUB_PARSER_WORD_PARSERS_LENGTH, SUB_PARSER_WORD_DIA_PRICE} from "../lib/parse/LibDiaSubParser.sol";
+import {
+    SUB_PARSER_WORD_PARSERS_LENGTH,
+    SUB_PARSER_WORD_DIA_PRICE,
+    SUB_PARSER_WORD_DIA_PRICE_AFTER
+} from "../lib/parse/LibDiaSubParser.sol";
 import {LibConvert} from "rain-lib-typecast-0.1.0/src/LibConvert.sol";
 import {LibSubParse} from "rainlang-0.1.2/src/lib/parse/LibSubParse.sol";
 import {IInterpreterExternV4} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterExternV4.sol";
@@ -42,6 +46,7 @@ abstract contract DiaSubParser is BaseRainlangSubParser {
         function(bytes32[] memory) internal pure returns (OperandV2)[] memory fs =
             new function(bytes32[] memory) internal pure returns (OperandV2)[](SUB_PARSER_WORD_PARSERS_LENGTH);
         fs[SUB_PARSER_WORD_DIA_PRICE] = LibParseOperand.handleOperandDisallowed;
+        fs[SUB_PARSER_WORD_DIA_PRICE_AFTER] = LibParseOperand.handleOperandDisallowed;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -59,6 +64,7 @@ abstract contract DiaSubParser is BaseRainlangSubParser {
         internal
         view returns (bool, bytes memory, bytes32[] memory)[](SUB_PARSER_WORD_PARSERS_LENGTH);
         fs[SUB_PARSER_WORD_DIA_PRICE] = diaPriceSubParser;
+        fs[SUB_PARSER_WORD_DIA_PRICE_AFTER] = diaPriceAfterSubParser;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -78,5 +84,17 @@ abstract contract DiaSubParser is BaseRainlangSubParser {
             LibSubParse.subParserExtern(
                 IInterpreterExternV4(extern()), constantsHeight, ioByte, operand, OPCODE_DIA_PRICE
             );
+    }
+
+    // slither-disable-next-line dead-code
+    function diaPriceAfterSubParser(uint256 constantsHeight, uint256 ioByte, OperandV2 operand)
+        internal
+        view
+        returns (bool, bytes memory, bytes32[] memory)
+    {
+        // slither-disable-next-line unused-return
+        return LibSubParse.subParserExtern(
+            IInterpreterExternV4(extern()), constantsHeight, ioByte, operand, OPCODE_DIA_PRICE_AFTER
+        );
     }
 }

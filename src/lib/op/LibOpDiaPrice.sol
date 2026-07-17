@@ -38,4 +38,36 @@ library LibOpDiaPrice {
         }
         return outputs;
     }
+
+    /// Extern integrity for the DIA price operation with a minimum update
+    /// timestamp. Always requires 3 inputs and produces 2 outputs.
+    function integrityAfter(OperandV2, uint256, uint256) internal pure returns (uint256, uint256) {
+        return (3, 2);
+    }
+
+    /// Runs the DIA price operation with a caller-supplied minimum update
+    /// timestamp.
+    /// @param inputs the inputs to the extern.
+    function runAfter(OperandV2, StackItem[] memory inputs) internal view returns (StackItem[] memory) {
+        IntOrAString symbol;
+        Float minimumUpdatedAt;
+        Float staleAfter;
+        assembly ("memory-safe") {
+            symbol := mload(add(inputs, 0x20))
+            minimumUpdatedAt := mload(add(inputs, 0x40))
+            staleAfter := mload(add(inputs, 0x60))
+        }
+
+        (Float price, Float updatedAt) = LibDia.getPriceNoOlderThanAndUpdatedAfter(symbol, minimumUpdatedAt, staleAfter);
+
+        StackItem[] memory outputs;
+        assembly ("memory-safe") {
+            outputs := mload(0x40)
+            mstore(0x40, add(outputs, 0x60))
+            mstore(outputs, 2)
+            mstore(add(outputs, 0x20), price)
+            mstore(add(outputs, 0x40), updatedAt)
+        }
+        return outputs;
+    }
 }

@@ -8,6 +8,7 @@ import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol"
 
 error UnsupportedChainId();
 error StaleDiaPrice(uint128 timestamp, uint256 staleAfter);
+error DiaPriceBefore(uint128 timestamp, uint256 minimumTimestamp);
 error ZeroDiaPrice(string key);
 
 /// @title LibDia
@@ -68,18 +69,38 @@ library LibDia {
         view
         returns (Float price, Float updatedAt)
     {
+        return getPriceNoOlderThanAndUpdatedAfter(feedKey, Float.wrap(0), staleAfter);
+    }
+
+    /// @notice Fetches a price from the DIA oracle and reverts if the price is
+    /// stale, zero, or older than the caller supplied minimum update timestamp.
+    /// @param feedKey The V3 IntOrAString key for the DIA feed.
+    /// @param minimumUpdatedAt The earliest acceptable update timestamp as a Float.
+    /// @param staleAfter The maximum age of the price in seconds as a Float.
+    /// @return price The price as a Float with 8 decimal places.
+    /// @return updatedAt The timestamp of the price update as a Float (seconds).
+    function getPriceNoOlderThanAndUpdatedAfter(IntOrAString feedKey, Float minimumUpdatedAt, Float staleAfter)
+        internal
+        view
+        returns (Float price, Float updatedAt)
+    {
         uint256 staleAfterUint = LibDecimalFloat.toFixedDecimalLossless(staleAfter, 0);
+        uint256 minimumUpdatedAtUint = LibDecimalFloat.toFixedDecimalLossless(minimumUpdatedAt, 0);
         string memory key = intOrAStringToString(feedKey);
         IDIAOracleV2 oracle = getOracleContract(block.chainid);
 
         (uint128 rawPrice, uint128 rawTimestamp) = oracle.getValue(key);
 
-        if (rawPrice == 0 && rawTimestamp == 0) {
+        if (rawPrice == 0) {
             revert ZeroDiaPrice(key);
         }
 
         if (block.timestamp - rawTimestamp > staleAfterUint) {
             revert StaleDiaPrice(rawTimestamp, staleAfterUint);
+        }
+
+        if (rawTimestamp < minimumUpdatedAtUint) {
+            revert DiaPriceBefore(rawTimestamp, minimumUpdatedAtUint);
         }
 
         price = LibDecimalFloat.packLossless(int256(uint256(rawPrice)), DIA_DECIMALS);

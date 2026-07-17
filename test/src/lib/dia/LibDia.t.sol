@@ -3,54 +3,13 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {LibDia, IDIAOracleV2, UnsupportedChainId} from "src/lib/dia/LibDia.sol";
+import {LibDia, DiaPriceBefore, ZeroDiaPrice} from "src/lib/dia/LibDia.sol";
+import {IDIAOracleV2} from "src/lib/dia/IDIAOracleV2.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE, DIA_BTC_USD_TIMESTAMP} from "test/lib/LibFork.sol";
-
-/// @dev Create a V3-encoded IntOrAString matching the latest Rain parser output.
-/// Layout: string data right-aligned above the low byte, low byte = 0xE0 | length.
-function fromStringV3(string memory s) pure returns (IntOrAString intOrAString) {
-    assembly ("memory-safe") {
-        let length := and(mload(s), 0x1f)
-        mstore(0, or(0xe0, length))
-        mcopy(sub(0x20, add(length, 1)), add(s, 0x20), length)
-        intOrAString := mload(0)
-    }
-}
-
-contract LibDiaGetOracleContractExternalWrapper {
-    function getOracleContract(uint256 chainId) external pure returns (IDIAOracleV2) {
-        return LibDia.getOracleContract(chainId);
-    }
-}
-
-contract LibDiaGetOracleContractTest is Test {
-    function testGetOracleContractBase() external pure {
-        IDIAOracleV2 oracle = LibDia.getOracleContract(8453);
-        assertEq(address(oracle), address(LibDia.ORACLE_BASE));
-    }
-
-    function testGetOracleContractUnsupported() external {
-        LibDiaGetOracleContractExternalWrapper wrapper = new LibDiaGetOracleContractExternalWrapper();
-        vm.expectRevert(UnsupportedChainId.selector);
-        wrapper.getOracleContract(1);
-    }
-}
-
-contract LibDiaStringV3Test is Test {
-    function testRoundTrip() external pure {
-        IntOrAString encoded = fromStringV3("BTC/USD");
-        string memory decoded = LibDia.intOrAStringToString(encoded);
-        assertEq(decoded, "BTC/USD");
-    }
-
-    function testRoundTripETH() external pure {
-        IntOrAString encoded = fromStringV3("ETH/USD");
-        string memory decoded = LibDia.intOrAStringToString(encoded);
-        assertEq(decoded, "ETH/USD");
-    }
-}
+import {fromStringV3} from "test/src/lib/dia/LibDia.fromStringV3.sol";
+import {LibDiaGetOracleContractExternalWrapper} from "test/src/lib/dia/LibDiaGetOracleContractExternalWrapper.sol";
 
 contract LibDiaGetPriceTest is Test {
     function testGetPriceBtcUsd() external {
@@ -71,5 +30,69 @@ contract LibDiaGetPriceTest is Test {
             Float.unwrap(LibDecimalFloat.packLossless(int256(uint256(7568457939217)), -8)),
             "unexpected BTC price"
         );
+    }
+
+    function testGetPriceUpdatedAfterAcceptsBoundaryTimestamp() external {
+        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
+        vm.chainId(8453);
+        vm.warp(DIA_BTC_USD_TIMESTAMP + 60);
+
+        IntOrAString key = fromStringV3("BTC/USD");
+        Float minimumUpdatedAt = LibDecimalFloat.packLossless(int256(DIA_BTC_USD_TIMESTAMP), 0);
+        Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
+
+        (Float price, Float updatedAt) = LibDia.getPriceNoOlderThanAndUpdatedAfter(key, minimumUpdatedAt, staleAfter);
+
+        assertTrue(Float.unwrap(price) != 0, "price should be non-zero");
+        assertEq(
+            Float.unwrap(updatedAt),
+            Float.unwrap(LibDecimalFloat.packLossless(int256(DIA_BTC_USD_TIMESTAMP), 0)),
+            "unexpected update timestamp"
+        );
+    }
+
+    function testGetPriceUpdatedAfterRejectsEarlierTimestamp() external {
+        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
+        vm.chainId(8453);
+        vm.warp(DIA_BTC_USD_TIMESTAMP + 60);
+
+        IntOrAString key = fromStringV3("BTC/USD");
+        Float minimumUpdatedAt = LibDecimalFloat.packLossless(int256(DIA_BTC_USD_TIMESTAMP + 1), 0);
+        Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
+
+        assertEq(
+            LibDecimalFloat.toFixedDecimalLossless(minimumUpdatedAt, 0),
+            DIA_BTC_USD_TIMESTAMP + 1,
+            "minimum timestamp should roundtrip"
+        );
+
+        LibDiaGetOracleContractExternalWrapper wrapper = new LibDiaGetOracleContractExternalWrapper();
+
+        vm.expectRevert(
+            abi.encodeWithSelector(DiaPriceBefore.selector, uint128(DIA_BTC_USD_TIMESTAMP), DIA_BTC_USD_TIMESTAMP + 1)
+        );
+        wrapper.getPriceNoOlderThanAndUpdatedAfter(key, minimumUpdatedAt, staleAfter);
+    }
+
+    function testGetPriceRejectsZeroPriceWithRecentTimestamp() external {
+        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
+        vm.chainId(8453);
+        vm.warp(DIA_BTC_USD_TIMESTAMP + 60);
+
+        string memory keyString = "BTC/USD";
+        IntOrAString key = fromStringV3(keyString);
+        Float minimumUpdatedAt = LibDecimalFloat.packLossless(int256(DIA_BTC_USD_TIMESTAMP), 0);
+        Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
+
+        vm.mockCall(
+            address(LibDia.ORACLE_BASE),
+            abi.encodeCall(IDIAOracleV2.getValue, (keyString)),
+            abi.encode(uint128(0), uint128(DIA_BTC_USD_TIMESTAMP))
+        );
+
+        LibDiaGetOracleContractExternalWrapper wrapper = new LibDiaGetOracleContractExternalWrapper();
+
+        vm.expectRevert(abi.encodeWithSelector(ZeroDiaPrice.selector, keyString));
+        wrapper.getPriceNoOlderThanAndUpdatedAfter(key, minimumUpdatedAt, staleAfter);
     }
 }

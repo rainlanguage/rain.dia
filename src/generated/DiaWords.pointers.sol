@@ -10,10 +10,10 @@ pragma solidity ^0.8.25;
 // file needs the contract to exist so that it can be compiled.
 
 /// @dev Hash of the known bytecode.
-bytes32 constant BYTECODE_HASH = bytes32(0x5b4e8b6e49b539f7e9acb2b269e8e8a4cff07eb2b5d37c096f2cf7b3a35ad54f);
+bytes32 constant BYTECODE_HASH = bytes32(0x95426eee54bc2a6c6ec6944674719c47b21df0161a0f2d1a97488c2efe1b5cfc);
 
 /// @dev The hash of the meta that describes the contract.
-bytes32 constant DESCRIBED_BY_META_HASH = bytes32(0xc865c530891587d866bcf511c911ef3847c5b94d31a4ca9c8f0cbca940e86f2f);
+bytes32 constant DESCRIBED_BY_META_HASH = bytes32(0xd640dd32c0fddfd363dbee27d05ee39324a805d88cbc0f3279e908b2001d495d);
 
 /// @dev The parse meta that is used to lookup word definitions.
 /// The structure of the parse meta is:
@@ -31,7 +31,7 @@ bytes32 constant DESCRIBED_BY_META_HASH = bytes32(0xc865c530891587d866bcf511c911
 /// again with the next bloom filter, offsetting all the indexes by the total
 /// bit count of the previous bloom filter. If we reach the end of the bloom
 /// filters then we have a miss.
-bytes constant PARSE_META = hex"0100000000000000000000000000000000000000000000000080000000000000000000a1c0ab";
+bytes constant PARSE_META = hex"0100000000000000000000000000000000000000000000000080000000004000000001770f6500a1c0ab";
 
 /// @dev The build depth of the parser meta.
 
@@ -42,18 +42,18 @@ uint8 constant PARSE_META_BUILD_DEPTH = 1;
 /// bytecode that dials back into this contract at eval time, and mapping
 /// to things that happen entirely on the interpreter such as well known
 /// constants and references to the context grid.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0771";
+bytes constant SUB_PARSER_WORD_PARSERS = hex"084d086d";
 
 /// @dev Every two bytes is a function pointer for an operand handler.
 /// These positional indexes all map to the same indexes looked up in the parse
 /// meta.
-bytes constant OPERAND_HANDLER_FUNCTION_POINTERS = hex"0b36";
+bytes constant OPERAND_HANDLER_FUNCTION_POINTERS = hex"0c760c76";
 
 /// @dev The function pointers for the integrity check fns.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0b2b";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0c5f0c6a";
 
 /// @dev The function pointers known to the interpreter for dynamic dispatch.
 /// By setting these as a constant they can be inlined into the interpreter
 /// and loaded at eval time for very low gas (~100) due to the compiler
 /// optimising it to a single `codecopy` to build the in memory bytes array.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0821";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"090f094d";

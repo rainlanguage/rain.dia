@@ -8,8 +8,9 @@ import {LibConvert} from "rain-lib-typecast-0.1.0/src/LibConvert.sol";
 import {OPCODE_FUNCTION_POINTERS, INTEGRITY_FUNCTION_POINTERS} from "../generated/DiaWords.pointers.sol";
 
 uint256 constant OPCODE_DIA_PRICE = 0;
+uint256 constant OPCODE_DIA_PRICE_AFTER = 1;
 
-uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 1;
+uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 2;
 
 abstract contract DiaExtern is BaseRainlangExtern {
     function opcodeFunctionPointers() internal pure override returns (bytes memory) {
@@ -25,6 +26,7 @@ abstract contract DiaExtern is BaseRainlangExtern {
         internal
         view returns (StackItem[] memory)[](OPCODE_FUNCTION_POINTERS_LENGTH);
         fs[OPCODE_DIA_PRICE] = LibOpDiaPrice.run;
+        fs[OPCODE_DIA_PRICE_AFTER] = LibOpDiaPrice.runAfter;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -38,6 +40,7 @@ abstract contract DiaExtern is BaseRainlangExtern {
         internal
         pure returns (uint256, uint256)[](OPCODE_FUNCTION_POINTERS_LENGTH);
         fs[OPCODE_DIA_PRICE] = LibOpDiaPrice.integrity;
+        fs[OPCODE_DIA_PRICE_AFTER] = LibOpDiaPrice.integrityAfter;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
