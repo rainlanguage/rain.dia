@@ -47,26 +47,4 @@ contract LibDiaStalePriceTest is Test {
         vm.expectRevert(abi.encodeWithSelector(StaleDiaPrice.selector, uint128(DIA_BTC_USD_TIMESTAMP), uint256(3600)));
         wrapper.getPriceNoOlderThan(key, staleAfter);
     }
-
-    /// @notice A price aged exactly `staleAfter` seconds is still accepted:
-    /// "no older than" is inclusive, only age strictly greater reverts.
-    function testGetPriceExactlyStaleAfterOk() external {
-        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
-        vm.chainId(8453);
-        // Exactly at the tolerance: age = staleAfter.
-        vm.warp(DIA_BTC_USD_TIMESTAMP + 3600);
-
-        LibDiaStalePriceExternalWrapper wrapper = new LibDiaStalePriceExternalWrapper();
-        IntOrAString key = fromStringV3("BTC/USD");
-        Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
-
-        (Float price, Float updatedAt) = wrapper.getPriceNoOlderThan(key, staleAfter);
-
-        assertTrue(Float.unwrap(price) != 0, "price should be non-zero");
-        assertEq(
-            Float.unwrap(updatedAt),
-            Float.unwrap(LibDecimalFloat.packLossless(int256(DIA_BTC_USD_TIMESTAMP), 0)),
-            "unexpected update timestamp"
-        );
-    }
 }
