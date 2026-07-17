@@ -38,7 +38,9 @@ abstract contract DiaSubParser is BaseRainlangSubParser {
         return SUB_PARSER_OPERAND_HANDLERS;
     }
 
-    function buildOperandHandlerFunctionPointers() external pure returns (bytes memory) {
+    /// @notice Builds the packed function pointer table for operand handlers.
+    /// @return encodedPointers The operand handler function pointers, packed as 16-bit values.
+    function buildOperandHandlerFunctionPointers() external pure returns (bytes memory encodedPointers) {
         function(bytes32[] memory) internal pure returns (OperandV2)[] memory fs =
             new function(bytes32[] memory) internal pure returns (OperandV2)[](SUB_PARSER_WORD_PARSERS_LENGTH);
         fs[SUB_PARSER_WORD_DIA_PRICE] = LibParseOperand.handleOperandDisallowed;
@@ -50,11 +52,15 @@ abstract contract DiaSubParser is BaseRainlangSubParser {
         return LibConvert.unsafeTo16BitBytes(pointers);
     }
 
-    function buildLiteralParserFunctionPointers() external pure returns (bytes memory) {
+    /// @notice Builds the literal parser pointer table; DIA defines no literal parsers.
+    /// @return encodedPointers An empty byte string.
+    function buildLiteralParserFunctionPointers() external pure returns (bytes memory encodedPointers) {
         return "";
     }
 
-    function buildSubParserWordParsers() external pure returns (bytes memory) {
+    /// @notice Builds the packed function pointer table for subparser words.
+    /// @return encodedPointers The subparser word function pointers, packed as 16-bit values.
+    function buildSubParserWordParsers() external pure returns (bytes memory encodedPointers) {
         function(uint256, uint256, OperandV2) internal view returns (bool, bytes memory, bytes32[] memory)[] memory fs = new function(uint256, uint256, OperandV2)
         internal
         view returns (bool, bytes memory, bytes32[] memory)[](SUB_PARSER_WORD_PARSERS_LENGTH);
