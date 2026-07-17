@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
 import {DiaWords} from "../../../src/concrete/DiaWords.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "../../lib/LibFork.sol";
+import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../lib/LibFork.sol";
 import {LibDia} from "../../../src/lib/dia/LibDia.sol";
 import {LibDecimalFloat, Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
@@ -20,7 +20,7 @@ import {LibExtern, ExternDispatchV2} from "rainlang-0.1.2/src/lib/extern/LibExte
 /// the extern contract works correctly with V3-encoded inputs.
 contract DiaWordsDiaPriceTest is Test {
     function testDiaWordsExternDispatch() external {
-        vm.createSelectFork(FORK_RPC_URL_BASE, FORK_BLOCK_BASE);
+        vm.createSelectFork(forkRpcUrlBase(vm), FORK_BLOCK_BASE);
         vm.chainId(LibDia.CHAIN_ID_BASE);
 
         DiaWords diaWords = new DiaWords();

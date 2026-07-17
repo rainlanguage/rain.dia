@@ -8,7 +8,7 @@ import {LibDiaGetOracleContractExternalWrapper} from "./LibDiaGetOracleContractE
 
 contract LibDiaGetOracleContractTest is Test {
     function testGetOracleContractBase() external pure {
-        IDIAOracleV2 oracle = LibDia.getOracleContract(8453);
+        IDIAOracleV2 oracle = LibDia.getOracleContract(LibDia.CHAIN_ID_BASE);
         assertEq(address(oracle), address(LibDia.ORACLE_BASE));
     }
 
