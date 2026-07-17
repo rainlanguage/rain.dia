@@ -35,5 +35,5 @@ forge build
 forge test
 
 # Regenerate pointers
-forge script script/BuildPointers.sol
+forge script script/Build.sol
 ```
