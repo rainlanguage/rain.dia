@@ -35,9 +35,8 @@ contract DiaWordsDiaPriceIntegrationTest is OpTest {
     function testDiaWordsDiaPriceParseEvalHappy() external {
         DiaWords diaWords = new DiaWords();
 
-        (Float price, Float updatedAt) = LibDia.getPriceNoOlderThan(
-            LibFromStringV3.fromStringV3("AMZN"), LibDecimalFloat.packLossless(3600, 0)
-        );
+        (Float price, Float updatedAt) =
+            LibDia.getPriceNoOlderThan(LibFromStringV3.fromStringV3("AMZN"), LibDecimalFloat.packLossless(3600, 0));
 
         StackItem[] memory expectedStack = new StackItem[](2);
         // Stack index 0 is the top of the stack: the last output, i.e. the
