@@ -7,6 +7,8 @@ import {LibIntOrAString, IntOrAString} from "rain-intorastring-0.1.0/src/lib/Lib
 import {LibDia} from "../dia/LibDia.sol";
 import {Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 
+error BadDiaPriceInputs(uint256 inputsLength);
+
 library LibOpDiaPrice {
     using LibIntOrAString for IntOrAString;
 
@@ -19,6 +21,10 @@ library LibOpDiaPrice {
     /// Runs the DIA price operation.
     /// @param inputs the inputs to the extern.
     function run(OperandV2, StackItem[] memory inputs) internal view returns (StackItem[] memory) {
+        if (inputs.length != 2) {
+            revert BadDiaPriceInputs(inputs.length);
+        }
+
         IntOrAString symbol;
         Float staleAfter;
         assembly ("memory-safe") {
