@@ -38,4 +38,13 @@ contract LibDiaStringV3Test is Test {
         vm.expectRevert(abi.encodeWithSelector(InvalidDiaString.selector, invalid));
         this.intOrAStringToStringExternal(invalid);
     }
+
+    function testRejectsNonCanonicalStringEncoding() external {
+        IntOrAString canonical = LibFromStringV3.fromStringV3("AMZN");
+        uint256 length = IntOrAString.unwrap(canonical) & 0x1f;
+        IntOrAString nonCanonical = IntOrAString.wrap(IntOrAString.unwrap(canonical) | (1 << (8 + length * 8)));
+
+        vm.expectRevert(abi.encodeWithSelector(InvalidDiaString.selector, nonCanonical));
+        this.intOrAStringToStringExternal(nonCanonical);
+    }
 }

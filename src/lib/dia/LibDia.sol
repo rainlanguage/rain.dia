@@ -9,7 +9,7 @@ import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol"
 error UnsupportedChainId();
 error StaleDiaPrice(uint128 timestamp, uint256 staleAfter);
 error ZeroDiaPrice(string key);
-error InvalidDiaString(uint256 value);
+error InvalidDiaString(IntOrAString value);
 error InvalidDiaTimestamp(uint128 timestamp);
 
 /// @title LibDia
@@ -45,14 +45,16 @@ library LibDia {
     function intOrAStringToString(IntOrAString intOrAString) internal pure returns (string memory s) {
         uint256 value = IntOrAString.unwrap(intOrAString);
         if (value & 0xe0 != 0xe0) {
-            revert InvalidDiaString(value);
+            revert InvalidDiaString(intOrAString);
         }
 
-        uint256 lengthMask = LENGTH_MASK_V3;
-        assembly ("memory-safe") {
-            let length := and(intOrAString, lengthMask)
-            let data := shr(8, intOrAString)
+        uint256 length = value & LENGTH_MASK_V3;
+        uint256 data = value >> 8;
+        if ((data >> (length * 8)) != 0) {
+            revert InvalidDiaString(intOrAString);
+        }
 
+        assembly ("memory-safe") {
             s := mload(0x40)
             mstore(0x40, add(s, 0x40))
             mstore(add(s, 0x20), 0)
