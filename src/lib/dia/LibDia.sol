@@ -74,7 +74,7 @@ library LibDia {
 
         (uint128 rawPrice, uint128 rawTimestamp) = oracle.getValue(key);
 
-        if (rawPrice == 0 && rawTimestamp == 0) {
+        if (rawPrice == 0) {
             revert ZeroDiaPrice(key);
         }
 

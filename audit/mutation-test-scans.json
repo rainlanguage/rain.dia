@@ -1,0 +1,18 @@
+[
+  {
+    "timestamp": "2026-07-18T17:10:00Z",
+    "commit": "8b5a89a6278a07a941e47a6aeba371f01b926ad2",
+    "publishedTag": null,
+    "commitsAheadOfTag": null,
+    "scope": "PR diff: LibDia.getPriceNoOlderThan zero-price guard (issue #14)",
+    "tool": "adversarial-mutation-test",
+    "skillVersion": "0.27.0",
+    "summary": {
+      "behaviours": 4,
+      "candidates": 1,
+      "confirmed": 0,
+      "filed": [],
+      "notes": "Scoped run on the #14 fix. Probes: base-guard restore, negate, delete, wrong-error-payload all killed. Adjacent staleness >= boundary mutant survived - known gap owned by open PR #57. Candidate noted for triage: nonzero price with future timestamp panics on underflow instead of a typed error (adjacent to #57 territory)."
+    }
+  }
+]
