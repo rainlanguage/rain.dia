@@ -8,10 +8,10 @@ import {LibRainDeploy} from "rain-deploy-0.1.2/src/lib/LibRainDeploy.sol";
 /// @notice Deterministic DiaWords deployment record for Zoltu CREATE2 deploys.
 library LibDiaWordsDeploy {
     /// @dev Zoltu-derived deployment address for the current DiaWords creation code.
-    address constant DIA_WORDS_DEPLOYED_ADDRESS = 0x64288bBA6FC86506f0aF001545eBCF23544B8389;
+    address constant DIA_WORDS_DEPLOYED_ADDRESS = 0xDf96DF297C963622C523F6d59e90b4C28CF61C21;
 
     /// @dev Runtime codehash for `DIA_WORDS_DEPLOYED_ADDRESS`.
-    bytes32 constant DIA_WORDS_DEPLOYED_CODEHASH = 0xf0b030be8140c85d41825a53dfc0c27ba42cf4959e34b8322963d191fb36b493;
+    bytes32 constant DIA_WORDS_DEPLOYED_CODEHASH = 0x13a26435e95e630193b0bed944800777c42faafa2673effeb187a3138c5fc056;
 
     /// @notice Predicts the Zoltu CREATE2 address for the given creation code.
     function zoltuAddress(bytes memory initCode) internal pure returns (address predicted) {
