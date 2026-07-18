@@ -14,6 +14,13 @@ import {LibDiaWordsDeploy} from "../src/lib/deploy/LibDiaWordsDeploy.sol";
 address constant METABOARD_ADDRESS = 0xfb8437AeFBB8031064E274527C5fc08e30Ac6928;
 
 contract Deploy is Script {
+    function deployDiaWords() internal virtual returns (address deployed) {
+        if (LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS.code.length == 0) {
+            return LibRainDeploy.deployZoltu(type(DiaWords).creationCode);
+        }
+        return LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS;
+    }
+
     function run() public {
         uint256 deployerPrivateKey = vm.envUint("DEPLOYMENT_KEY");
         bytes memory subParserDescribedByMeta = vm.readFileBinary("meta/DiaWords.rain.meta");
@@ -21,7 +28,7 @@ contract Deploy is Script {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        address deployed = LibRainDeploy.deployZoltu(type(DiaWords).creationCode);
+        address deployed = deployDiaWords();
         if (deployed != LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS) {
             revert LibRainDeploy.UnexpectedDeployedAddress(LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS, deployed);
         }

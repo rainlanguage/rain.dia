@@ -18,11 +18,6 @@ contract LibDiaWordsDeployTest is Test {
         );
     }
 
-    function testPinnedCodehashMatchesRuntimeBytecode() external {
-        LibRainDeploy.deployZoltu(type(DiaWords).creationCode);
-        assertEq(LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS.codehash, LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_CODEHASH);
-    }
-
     function testZoltuDeployMatchesPinnedRecord() external {
         address deployed = LibRainDeploy.deployZoltu(type(DiaWords).creationCode);
         assertEq(deployed, LibDiaWordsDeploy.DIA_WORDS_DEPLOYED_ADDRESS);
