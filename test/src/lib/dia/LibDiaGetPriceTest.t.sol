@@ -60,29 +60,19 @@ contract LibDiaGetPriceTest is Test {
         );
     }
 
-    /// raw price 264100000000000022736 (~$264.10); update timestamp 1778908932 at fork block.
-    function testGetPriceAmzn() external {
-        _assertFeedPrice("AMZN", 264100000000000022736);
-    }
+    function testGetPrices() external view {
+        string[5] memory symbols = ["AMZN", "NVDA", "COIN", "MSTR", "TSLA"];
+        uint256[5] memory rawPrices = [
+            uint256(264100000000000022736),
+            225389999999999986352,
+            195539999999999992048,
+            177455000000000012512,
+            422350000000000022752
+        ];
 
-    /// raw price 225389999999999986352 (~$225.39); update timestamp 1778908933 at fork block.
-    function testGetPriceNvda() external {
-        _assertFeedPrice("NVDA", 225389999999999986352);
-    }
-
-    /// raw price 195539999999999992048 (~$195.54); update timestamp 1778908934 at fork block.
-    function testGetPriceCoin() external {
-        _assertFeedPrice("COIN", 195539999999999992048);
-    }
-
-    /// raw price 177455000000000012512 (~$177.46); update timestamp 1778908935 at fork block.
-    function testGetPriceMstr() external {
-        _assertFeedPrice("MSTR", 177455000000000012512);
-    }
-
-    /// raw price 422350000000000022752 (~$422.35); update timestamp 1778908936 at fork block.
-    function testGetPriceTsla() external {
-        _assertFeedPrice("TSLA", 422350000000000022752);
+        for (uint256 i = 0; i < symbols.length; i++) {
+            _assertFeedPrice(symbols[i], rawPrices[i]);
+        }
     }
 
     function testStalePriceReverts() external {
@@ -93,12 +83,14 @@ contract LibDiaGetPriceTest is Test {
         this.getPriceNoOlderThanExternal(LibFromStringV3.fromStringV3("TEST"), LibDecimalFloat.packLossless(100, 0));
     }
 
-    function testExactStaleBoundaryReverts() external {
+    function testExactStaleBoundarySucceeds() external {
         vm.warp(1000);
         _mockValue("TEST", 1e18, 900);
 
-        vm.expectRevert(abi.encodeWithSelector(StaleDiaPrice.selector, uint128(900), uint256(100)));
-        this.getPriceNoOlderThanExternal(LibFromStringV3.fromStringV3("TEST"), LibDecimalFloat.packLossless(100, 0));
+        (Float price, Float updatedAt) = _getPrice("TEST", 100);
+
+        assertEq(Float.unwrap(price), Float.unwrap(LibDecimalFloat.packLossless(1e18, -18)));
+        assertEq(Float.unwrap(updatedAt), Float.unwrap(LibDecimalFloat.packLossless(900, 0)));
     }
 
     function testJustInsideStaleBoundarySucceeds() external {

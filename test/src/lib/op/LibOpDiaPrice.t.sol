@@ -40,7 +40,15 @@ contract LibOpDiaPriceTest is Test {
         StackItem[] memory outputs = LibOpDiaPrice.run(OperandV2.wrap(0), inputs);
         assertEq(outputs.length, 2);
 
-        assertTrue(StackItem.unwrap(outputs[0]) != bytes32(0), "price should be non-zero");
-        assertTrue(StackItem.unwrap(outputs[1]) != bytes32(0), "timestamp should be non-zero");
+        assertEq(
+            StackItem.unwrap(outputs[0]),
+            Float.unwrap(LibDecimalFloat.packLossless(264100000000000022736, -18)),
+            "unexpected AMZN price"
+        );
+        assertEq(
+            StackItem.unwrap(outputs[1]),
+            Float.unwrap(LibDecimalFloat.packLossless(1778908932, 0)),
+            "unexpected AMZN timestamp"
+        );
     }
 }

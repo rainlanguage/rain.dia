@@ -12,14 +12,16 @@ contract LibDiaStringV3Test is Test {
         return LibDia.intOrAStringToString(value);
     }
 
-    function testRoundTrip() external pure {
-        string memory decoded = LibDia.intOrAStringToString(LibFromStringV3.fromStringV3("AMZN"));
-        assertEq(decoded, "AMZN");
-    }
+    function testRoundTrip(bytes32 data, uint8 length) external pure {
+        length %= 32;
+        bytes memory value = abi.encodePacked(data);
+        assembly ("memory-safe") {
+            mstore(value, length)
+        }
 
-    function testRoundTripNVDA() external pure {
-        string memory decoded = LibDia.intOrAStringToString(LibFromStringV3.fromStringV3("NVDA"));
-        assertEq(decoded, "NVDA");
+        string memory input = string(value);
+        string memory decoded = LibDia.intOrAStringToString(LibFromStringV3.fromStringV3(input));
+        assertEq(decoded, input);
     }
 
     function testRoundTripEmpty() external pure {
