@@ -3,13 +3,9 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {MissingBaseRpcUrl, forkRpcUrlBase, resolveForkRpcUrl} from "./LibFork.sol";
+import {MissingBaseRpcUrl, resolveForkRpcUrl} from "./LibFork.sol";
 
 contract LibForkTest is Test {
-    function forkRpcUrlBaseExternal() external view returns (string memory) {
-        return forkRpcUrlBase(vm);
-    }
-
     function resolveForkRpcUrlExternal(bool hasUrl, string memory configuredUrl, bool isCi)
         external
         pure
@@ -36,10 +32,7 @@ contract LibForkTest is Test {
     }
 
     function testEmptyBaseRpcUrlRevertsInCi() external {
-        vm.setEnv("BASE_RPC_URL", "");
-        vm.setEnv("CI", "true");
-
         vm.expectRevert(MissingBaseRpcUrl.selector);
-        this.forkRpcUrlBaseExternal();
+        this.resolveForkRpcUrlExternal(true, "", true);
     }
 }
