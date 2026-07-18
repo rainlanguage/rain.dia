@@ -18,22 +18,12 @@ contract LibParseLiteralDiaKeyTest is Test {
     function parseStringLiteral(bytes memory source) internal view returns (bytes32 value) {
         ParseState memory state =
             LibParseState.newState(source, "", "", LibAllStandardOps.literalParserFunctionPointers());
-        state.literalParsers = LibAllStandardOps.literalParserFunctionPointers();
         uint256 cursor = Pointer.unwrap(source.dataPointer());
         uint256 end = cursor + source.length;
         (, value) = state.parseLiteral(cursor, end);
     }
 
-    function testRainlangParserStringMatchesDiaWordsV3Encoding(string memory key) external view {
-        bytes memory keyBytes = bytes(key);
-        vm.assume(keyBytes.length <= 31);
-        for (uint256 i = 0; i < keyBytes.length; i++) {
-            bytes1 char = keyBytes[i];
-            vm.assume(
-                (char >= 0x30 && char <= 0x39) || (char >= 0x41 && char <= 0x5a) || (char >= 0x61 && char <= 0x7a)
-            );
-        }
-
+    function assertParserMatchesV3Encoding(string memory key) internal view {
         bytes memory source = bytes(string.concat('"', key, '"'));
         bytes32 parsed = parseStringLiteral(source);
 
@@ -49,8 +39,18 @@ contract LibParseLiteralDiaKeyTest is Test {
         );
     }
 
-    function testRainlangParserStringMatchesDiaWordsV3EncodingAmzn() external view {
-        bytes32 parsed = parseStringLiteral(bytes('"AMZN"'));
-        assertEq(parsed, bytes32(IntOrAString.unwrap(LibFromStringV3.fromStringV3("AMZN"))));
+    function testRainlangParserStringMatchesDiaWordsV3Encoding(bytes32 seed, uint8 length) external view {
+        length = uint8(bound(length, 0, 31));
+        bytes memory alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        bytes memory keyBytes = new bytes(length);
+        for (uint256 i = 0; i < length; i++) {
+            keyBytes[i] = alphabet[uint8(seed[i]) % alphabet.length];
+        }
+
+        assertParserMatchesV3Encoding(string(keyBytes));
+    }
+
+    function testRainlangParserStringMatchesDiaWordsV3Encoding31Bytes() external view {
+        assertParserMatchesV3Encoding("ABCDEFGHIJKLMNOPQRSTUVWXYZ12345");
     }
 }
