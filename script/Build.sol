@@ -10,7 +10,7 @@ import {LibGenParseMeta} from "rain-interpreter-interface-0.1.0/src/lib/codegen/
 import {LibDiaSubParser} from "src/lib/parse/LibDiaSubParser.sol";
 import {PARSE_META_BUILD_DEPTH} from "src/abstract/DiaSubParser.sol";
 
-contract BuildPointers is Script {
+contract Build is Script {
     function buildDiaWordsPointers() internal {
         DiaWords diaWords = new DiaWords();
 
