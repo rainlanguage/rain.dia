@@ -6,7 +6,6 @@ import {OpTest} from "rainlang-0.1.2/test/abstract/OpTest.sol";
 import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 import {LibDia} from "../../../src/lib/dia/LibDia.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../lib/LibFork.sol";
-import {LibFromStringV3} from "../../lib/LibFromStringV3.sol";
 import {StackItem} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterV4.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {Strings} from "@openzeppelin-contracts-5.6.1/utils/Strings.sol";
@@ -15,9 +14,8 @@ import {LibInterpreterDeploy} from "rainlang-0.1.2/src/lib/deploy/LibInterpreter
 /// @notice Full parse→eval integration for `dia-price`. The parser encodes the
 /// `"AMZN"` string literal as a V3 IntOrAString
 /// (`LibIntOrAString.fromStringV3`) and `LibDia.intOrAStringToString` decodes
-/// the same layout, so evaluating rainlang source end to end exercises the
-/// producer/consumer encoding contract: if either side of the boundary changes
-/// encoding, this test fails.
+/// the same layout. Hardcoded fork outputs ensure parser or consumer drift
+/// cannot be hidden by deriving expectations through the same decode path.
 contract DiaWordsDiaPriceIntegrationTest is OpTest {
     using Strings for address;
 
@@ -30,19 +28,16 @@ contract DiaWordsDiaPriceIntegrationTest is OpTest {
     }
 
     /// Parse and eval `dia-price("AMZN" 3600)` against the pinned Base fork.
-    /// Expected stack values are derived from `LibDia.getPriceNoOlderThan` at
-    /// `FORK_BLOCK_BASE` so price and timestamp stay aligned with the fork pin.
+    /// Expected stack values are pinned directly to the oracle response at
+    /// `FORK_BLOCK_BASE`.
     function testDiaWordsDiaPriceParseEvalHappy() external {
         DiaWords diaWords = new DiaWords();
-
-        (Float price, Float updatedAt) =
-            LibDia.getPriceNoOlderThan(LibFromStringV3.fromStringV3("AMZN"), LibDecimalFloat.packLossless(3600, 0));
 
         StackItem[] memory expectedStack = new StackItem[](2);
         // Stack index 0 is the top of the stack: the last output, i.e. the
         // update timestamp.
-        expectedStack[0] = StackItem.wrap(Float.unwrap(updatedAt));
-        expectedStack[1] = StackItem.wrap(Float.unwrap(price));
+        expectedStack[0] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(1781520797, 0)));
+        expectedStack[1] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(238650000000000005680, -18)));
 
         checkHappy(
             bytes(
