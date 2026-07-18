@@ -6,12 +6,7 @@ import {Test} from "forge-std-1.16.1/src/Test.sol";
 import {Deploy, METABOARD_ADDRESS} from "../../script/Deploy.sol";
 import {LibRainDeploy} from "rain-deploy-0.1.2/src/lib/LibRainDeploy.sol";
 import {LibDiaWordsDeploy} from "../../src/lib/deploy/LibDiaWordsDeploy.sol";
-
-contract UnexpectedAddressDeploy is Deploy {
-    function deployDiaWords() internal pure override returns (address) {
-        return address(1);
-    }
-}
+import {UnexpectedAddressDeploy} from "./UnexpectedAddressDeploy.sol";
 
 contract DeployTest is Test {
     function setUp() external {
