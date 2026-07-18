@@ -43,13 +43,6 @@ jobs:
           gc-max-store-size-linux: 1G
 
       - run: nix develop -c rainix-sol-prelude
-        working-directory: ./lib/rain.interpreter
-      - run: nix develop -c rainix-rs-prelude
-        working-directory: ./lib/rain.interpreter
-      - run: nix develop -c i9r-prelude
-        working-directory: ./lib/rain.interpreter
-
-      - run: nix develop -c rainix-sol-prelude
       - run: nix develop -c rain-dia-prelude
 
       - run: nix develop -c rainix-sol-artifacts
