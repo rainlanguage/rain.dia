@@ -43,12 +43,12 @@ contract LibOpDiaPriceTest is Test {
 
         assertEq(
             StackItem.unwrap(outputs[0]),
-            Float.unwrap(LibDecimalFloat.packLossless(264100000000000022736, -18)),
+            Float.unwrap(LibDecimalFloat.packLossless(238650000000000005680, -18)),
             "unexpected AMZN price"
         );
         assertEq(
             StackItem.unwrap(outputs[1]),
-            Float.unwrap(LibDecimalFloat.packLossless(1778908932, 0)),
+            Float.unwrap(LibDecimalFloat.packLossless(1781520797, 0)),
             "unexpected AMZN timestamp"
         );
     }
