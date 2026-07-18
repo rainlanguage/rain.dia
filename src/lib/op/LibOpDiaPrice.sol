@@ -17,7 +17,10 @@ library LibOpDiaPrice {
     }
 
     /// Runs the DIA price operation.
-    /// @param inputs the inputs to the extern.
+    /// @param inputs the inputs to the extern: the feed key as a V3
+    /// IntOrAString and the max price age in seconds as a Float.
+    /// @return two stack items: the price as a Float with 8 decimal places
+    /// and the timestamp of the price update in seconds as a Float.
     function run(OperandV2, StackItem[] memory inputs) internal view returns (StackItem[] memory) {
         IntOrAString symbol;
         Float staleAfter;
