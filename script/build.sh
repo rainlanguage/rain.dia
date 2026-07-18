@@ -17,21 +17,12 @@ build_artifacts() {
     -l none \
     -o meta/DiaWords.rain.meta
   forge script --silent ./script/Build.sol
+  forge script --silent ./script/Build.sol
 }
 
 if command -v forge >/dev/null 2>&1 && command -v rain >/dev/null 2>&1; then
   build_artifacts
 else
-  nix develop -c bash -euxo pipefail -c '
-    mkdir -p meta
-    forge script --silent ./script/BuildAuthoringMeta.sol
-    rain meta build \
-      -i <(cat ./meta/DiaSubParserAuthoringMeta.rain.meta) \
-      -m authoring-meta-v2 \
-      -t cbor \
-      -e deflate \
-      -l none \
-      -o meta/DiaWords.rain.meta
-    forge script --silent ./script/Build.sol
-  '
+  export -f build_artifacts
+  nix develop -c bash -euxo pipefail -c build_artifacts
 fi
