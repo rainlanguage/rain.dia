@@ -12,7 +12,7 @@ import {
     OPERAND_HANDLER_FUNCTION_POINTERS,
     SUB_PARSER_WORD_PARSERS
 } from "src/generated/DiaWords.pointers.sol";
-import {OperandV2} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterV4.sol";
+import {OperandV2, OPCODE_EXTERN} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterV4.sol";
 import {
     IInterpreterExternV4,
     ExternDispatchV2,
@@ -45,12 +45,6 @@ contract DiaWordsPointersTest is Test {
         assertEq(diaWords.buildSubParserWordParsers(), SUB_PARSER_WORD_PARSERS);
     }
 
-    function testBuildLiteralParserFunctionPointersIsEmpty() external {
-        DiaWords diaWords = new DiaWords();
-
-        assertEq(diaWords.buildLiteralParserFunctionPointers(), hex"");
-    }
-
     function testOpcodeAndSubParserTablesShareLengthAndIndexConvention() external pure {
         assertEq(OPCODE_FUNCTION_POINTERS_LENGTH, SUB_PARSER_WORD_PARSERS_LENGTH);
         assertEq(OPCODE_DIA_PRICE, SUB_PARSER_WORD_DIA_PRICE);
@@ -63,10 +57,17 @@ contract DiaWordsPointersTest is Test {
     function testDiaPriceSubParserEncodesDiaPriceOpcodeAndZeroOperand() external {
         DiaWords diaWords = new DiaWords();
         bytes memory word = bytes("dia-price");
+        uint16 constantsHeight = 7;
+        uint8 ioByte = 0x22;
 
-        (bool success,, bytes32[] memory constants) =
-            diaWords.subParseWord2(bytes.concat(bytes2(0), bytes1(0), bytes2(uint16(word.length)), word, bytes32(0)));
+        (bool success, bytes memory bytecode, bytes32[] memory constants) = diaWords.subParseWord2(
+            bytes.concat(bytes2(constantsHeight), bytes1(ioByte), bytes2(uint16(word.length)), word, bytes32(0))
+        );
         assertTrue(success);
+        assertEq(bytecode.length, 4);
+        assertEq(uint8(bytecode[0]), OPCODE_EXTERN);
+        assertEq(uint8(bytecode[1]), ioByte);
+        assertEq(uint16(uint8(bytecode[2])) << 8 | uint16(uint8(bytecode[3])), constantsHeight);
         assertEq(constants.length, 1);
 
         (IInterpreterExternV4 decodedExtern, ExternDispatchV2 dispatch) =

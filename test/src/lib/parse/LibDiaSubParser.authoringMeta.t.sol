@@ -7,8 +7,9 @@ import {AuthoringMetaV2} from "rain-interpreter-interface-0.1.0/src/interface/IP
 import {LibDiaSubParser} from "src/lib/parse/LibDiaSubParser.sol";
 
 contract LibDiaSubParserAuthoringMetaTest is Test {
-    function testAuthoringMetaV2() external pure {
-        AuthoringMetaV2[] memory authoringMeta = abi.decode(LibDiaSubParser.authoringMetaV2(), (AuthoringMetaV2[]));
+    function testAuthoringMetaV2() external view {
+        bytes memory encodedAuthoringMeta = LibDiaSubParser.authoringMetaV2();
+        AuthoringMetaV2[] memory authoringMeta = abi.decode(encodedAuthoringMeta, (AuthoringMetaV2[]));
 
         assertEq(authoringMeta.length, 1);
         assertEq(authoringMeta[0].word, bytes32("dia-price"));
@@ -17,5 +18,6 @@ contract LibDiaSubParserAuthoringMetaTest is Test {
             authoringMeta[0].description,
             "Returns the current price of the given asset according to DIA. Accepts 2 inputs, the price key as a string (e.g. \"AMZN\") and the timeout in seconds. The price has 18 decimal places. The timeout will be used to determine if the price is stale and revert if it is. Returns 2 outputs: the price and the timestamp of the last update."
         );
+        assertEq(vm.readFileBinary("meta/DiaSubParserAuthoringMeta.rain.meta"), encodedAuthoringMeta);
     }
 }
