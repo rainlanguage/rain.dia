@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {LibOpDiaPrice, OperandV2, StackItem} from "src/lib/op/LibOpDiaPrice.sol";
+import {LibOpDiaPrice, BadDiaPriceInputs, OperandV2, StackItem} from "src/lib/op/LibOpDiaPrice.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE, DIA_BTC_USD_TIMESTAMP} from "test/lib/LibFork.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
@@ -22,6 +22,35 @@ contract LibOpDiaPriceTest is Test {
         (uint256 calculatedInputs, uint256 calculatedOutputs) = LibOpDiaPrice.integrity(operand, inputs, outputs);
         assertEq(calculatedInputs, 2);
         assertEq(calculatedOutputs, 2);
+    }
+
+    function runExternal(OperandV2 operand, StackItem[] memory inputs) external view returns (StackItem[] memory) {
+        return LibOpDiaPrice.run(operand, inputs);
+    }
+
+    /// Any input count other than the 2 that `integrity` declares reverts
+    /// before the assembly loads can read adjacent memory. The revert carries
+    /// the actual length, and fires with no oracle (or fork) present at all,
+    /// proving nothing is read past the guard.
+    function testRunBadArityReverts(uint8 length) external {
+        vm.assume(length != 2);
+        StackItem[] memory inputs = new StackItem[](length);
+        vm.expectRevert(abi.encodeWithSelector(BadDiaPriceInputs.selector, uint256(length)));
+        this.runExternal(OperandV2.wrap(0), inputs);
+    }
+
+    /// The zero- and one-input direct-call cases from the audit finding, with
+    /// the one-input case carrying a real feed key to show the guard fires on
+    /// arity, not on content.
+    function testRunZeroAndOneInputRevert() external {
+        StackItem[] memory zeroInputs = new StackItem[](0);
+        vm.expectRevert(abi.encodeWithSelector(BadDiaPriceInputs.selector, 0));
+        this.runExternal(OperandV2.wrap(0), zeroInputs);
+
+        StackItem[] memory oneInput = new StackItem[](1);
+        oneInput[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(fromStringV3("BTC/USD"))));
+        vm.expectRevert(abi.encodeWithSelector(BadDiaPriceInputs.selector, 1));
+        this.runExternal(OperandV2.wrap(0), oneInput);
     }
 
     function testRunForkCurrentPriceHappy() external {

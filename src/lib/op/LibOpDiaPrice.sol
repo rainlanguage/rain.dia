@@ -7,6 +7,10 @@ import {LibIntOrAString, IntOrAString} from "rain-intorastring-0.1.0/src/lib/Lib
 import {LibDia} from "../dia/LibDia.sol";
 import {Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 
+/// @dev Thrown when the DIA price extern is called with an input count other
+/// than the 2 (feed key, stale-after) that `integrity` declares.
+error BadDiaPriceInputs(uint256 length);
+
 library LibOpDiaPrice {
     using LibIntOrAString for IntOrAString;
 
@@ -19,6 +23,12 @@ library LibOpDiaPrice {
     /// Runs the DIA price operation.
     /// @param inputs the inputs to the extern.
     function run(OperandV2, StackItem[] memory inputs) internal view returns (StackItem[] memory) {
+        // A direct extern call is not bound by integrity checks, so fail
+        // closed on arity before the assembly reads below can interpret
+        // adjacent memory as the feed key or stale-after.
+        if (inputs.length != 2) {
+            revert BadDiaPriceInputs(inputs.length);
+        }
         IntOrAString symbol;
         Float staleAfter;
         assembly ("memory-safe") {
