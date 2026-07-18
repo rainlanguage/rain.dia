@@ -78,7 +78,15 @@ library LibDia {
             revert ZeroDiaPrice(key);
         }
 
-        if (block.timestamp - rawTimestamp > staleAfterUint) {
+        // A zero timestamp means the oracle has no recorded update time for
+        // this key, which is maximally stale regardless of `staleAfter`.
+        if (rawTimestamp == 0) {
+            revert StaleDiaPrice(rawTimestamp, staleAfterUint);
+        }
+
+        // Staleness is fail-safe at the boundary: a price aged exactly
+        // `staleAfter` seconds is already stale.
+        if (block.timestamp - rawTimestamp >= staleAfterUint) {
             revert StaleDiaPrice(rawTimestamp, staleAfterUint);
         }
 
