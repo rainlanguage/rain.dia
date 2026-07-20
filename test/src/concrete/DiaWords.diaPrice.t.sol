@@ -8,8 +8,10 @@ import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "test/lib/LibFork.sol";
 import {LibDia} from "src/lib/dia/LibDia.sol";
 import {LibDecimalFloat, Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
-import {LibOpDiaPrice, OperandV2, StackItem} from "src/lib/op/LibOpDiaPrice.sol";
+import {OPCODE_DIA_PRICE} from "src/abstract/DiaExtern.sol";
 import {LibFromStringV3} from "test/lib/LibFromStringV3.sol";
+import {OperandV2, StackItem} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterV4.sol";
+import {LibExtern, ExternDispatchV2} from "rainlang-0.1.2/src/lib/extern/LibExtern.sol";
 
 /// @notice Tests DiaWords extern dispatch directly (bypassing the parser).
 /// The integration test with checkHappy/OpTest is not possible because the
@@ -27,7 +29,12 @@ contract DiaWordsDiaPriceTest is Test {
         inputs[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(LibFromStringV3.fromStringV3("AMZN"))));
         inputs[1] = StackItem.wrap(Float.unwrap(LibDecimalFloat.packLossless(3600, 0)));
 
-        StackItem[] memory outputs = LibOpDiaPrice.run(OperandV2.wrap(0), inputs);
+        ExternDispatchV2 dispatch = LibExtern.encodeExternDispatch(OPCODE_DIA_PRICE, OperandV2.wrap(bytes32(0)));
+        (uint256 actualInputs, uint256 actualOutputs) = diaWords.externIntegrity(dispatch, 0, 0);
+        assertEq(actualInputs, 2);
+        assertEq(actualOutputs, 2);
+
+        StackItem[] memory outputs = diaWords.extern(dispatch, inputs);
         assertEq(outputs.length, 2);
         assertTrue(StackItem.unwrap(outputs[0]) != bytes32(0), "price should be non-zero");
         assertTrue(StackItem.unwrap(outputs[1]) != bytes32(0), "timestamp should be non-zero");
