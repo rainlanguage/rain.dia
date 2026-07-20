@@ -30,28 +30,40 @@ price updated-at: dia-price("AMZN" 3600);
 
 ## Development
 
+Run all commands from the repository root. On a clean clone, install the pinned
+Soldeer dependencies first:
+
 ```sh
+nix develop -c forge soldeer install
+
 # Build
-forge build
+nix develop -c forge build
 
 # Run tests (requires Base RPC)
-forge test
+nix develop -c forge test
 
-# Regenerate pointers
-forge script script/BuildPointers.sol
+# Regenerate authoring meta, final contract meta, then generated pointers
+nix develop -c ./script/build.sh
+
+# Equivalent standalone regeneration without entering the dev shell
+nix run .#rain-dia-prelude
 ```
+
+`script/build.sh` is the single implementation of the artifact pipeline. It uses
+the repo dev shell when `forge` and `rain` are not already on `PATH` (e.g.
+rainix copy-artifacts CI). The Nix commands above provide both tools. The script
+writes `meta/DiaSubParserAuthoringMeta.rain.meta`, builds
+`meta/DiaWords.rain.meta`, and finally runs `script/Build.sol` so
+`src/generated/DiaWords.pointers.sol` hashes the final meta.
 
 ### Pre-commit
 
-Git hooks use the committed `.pre-commit-config.yaml` (not Nix store symlinks).
-Install once, then hooks run on `git commit`:
+Entering `nix develop` generates `.pre-commit-config.yaml` as an untracked
+symlink into the Nix store and installs the configured hooks. The symlink is
+machine-specific and must not be committed. Run all hooks manually with:
 
 ```sh
-pip install pre-commit
-pre-commit install
-pre-commit run --all-files
+nix develop -c pre-commit run --all-files
 ```
 
-Solidity formatting runs when `forge` is on `PATH` (e.g. inside `nix develop`);
-otherwise the hook is skipped so IDE commits still work. Run
-`nix develop -c forge fmt` before committing `.sol` changes if needed.
+Run `nix develop -c forge fmt --check` before committing Solidity changes.

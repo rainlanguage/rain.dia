@@ -3,8 +3,8 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {LibDia, InvalidDiaString} from "src/lib/dia/LibDia.sol";
-import {LibFromStringV3} from "test/lib/LibFromStringV3.sol";
+import {LibDia, InvalidDiaString} from "../../../../src/lib/dia/LibDia.sol";
+import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 
 contract LibDiaStringV3Test is Test {

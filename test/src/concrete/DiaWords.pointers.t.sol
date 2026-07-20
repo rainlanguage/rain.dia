@@ -3,15 +3,15 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {DiaWords} from "src/concrete/DiaWords.sol";
-import {OPCODE_DIA_PRICE, OPCODE_FUNCTION_POINTERS_LENGTH} from "src/abstract/DiaExtern.sol";
-import {SUB_PARSER_WORD_DIA_PRICE, SUB_PARSER_WORD_PARSERS_LENGTH} from "src/lib/parse/LibDiaSubParser.sol";
+import {DiaWords} from "../../../src/concrete/DiaWords.sol";
+import {OPCODE_DIA_PRICE, OPCODE_FUNCTION_POINTERS_LENGTH} from "../../../src/abstract/DiaExtern.sol";
+import {SUB_PARSER_WORD_DIA_PRICE, SUB_PARSER_WORD_PARSERS_LENGTH} from "../../../src/lib/parse/LibDiaSubParser.sol";
 import {
     OPCODE_FUNCTION_POINTERS,
     INTEGRITY_FUNCTION_POINTERS,
     OPERAND_HANDLER_FUNCTION_POINTERS,
     SUB_PARSER_WORD_PARSERS
-} from "src/generated/DiaWords.pointers.sol";
+} from "../../../src/generated/DiaWords.pointers.sol";
 import {OperandV2, OPCODE_EXTERN} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterV4.sol";
 import {
     IInterpreterExternV4,

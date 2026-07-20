@@ -3,11 +3,17 @@
 pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {LibDia, StaleDiaPrice, ZeroDiaPrice, InvalidDiaString, InvalidDiaTimestamp} from "src/lib/dia/LibDia.sol";
-import {IDIAOracleV2} from "src/lib/dia/IDIAOracleV2.sol";
+import {
+    LibDia,
+    StaleDiaPrice,
+    ZeroDiaPrice,
+    InvalidDiaString,
+    InvalidDiaTimestamp
+} from "../../../../src/lib/dia/LibDia.sol";
+import {IDIAOracleV2} from "../../../../src/lib/dia/IDIAOracleV2.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
-import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "test/lib/LibFork.sol";
-import {LibFromStringV3} from "test/lib/LibFromStringV3.sol";
+import {FORK_RPC_URL_BASE, FORK_BLOCK_BASE} from "../../../lib/LibFork.sol";
+import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 
 /// @dev Hardcoded prices are pinned to a Base fork snapshot (see comments on each test).
