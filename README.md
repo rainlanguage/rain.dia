@@ -8,18 +8,21 @@ Provides a `dia-price` word that fetches prices from the DIA oracle on-chain.
 
 ```rain
 using-words-from <DiaWords address>
-price updated-at: dia-price("BTC/USD" 3600);
+price updated-at: dia-price("AMZN" 3600);
 ```
 
 ### Inputs
 
-1. **key** — DIA price feed key as a string, e.g. `"BTC/USD"`, `"ETH/USD"`. Passed through directly to the DIA oracle contract.
-2. **staleAfter** — Maximum age of the price in seconds. Reverts if the price is older than this.
+1. **key** — DIA price feed key as a string, e.g. `"AMZN"`, `"NVDA"`. Passed
+   through directly to the DIA oracle contract.
+2. **staleAfter** — Maximum age of the price in seconds. Reverts if the price is
+   older than this.
 
 ### Outputs
 
-1. **price** — The asset price as a Float (8 decimal places).
-2. **updatedAt** — The timestamp of the last price update as a Float (unix seconds).
+1. **price** — The asset price as a Float (18 decimal places).
+2. **updatedAt** — The timestamp of the last price update as a Float (unix
+   seconds).
 
 ## Supported chains
 
@@ -37,3 +40,18 @@ forge test
 # Regenerate pointers
 forge script script/BuildPointers.sol
 ```
+
+### Pre-commit
+
+Git hooks use the committed `.pre-commit-config.yaml` (not Nix store symlinks).
+Install once, then hooks run on `git commit`:
+
+```sh
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
+Solidity formatting runs when `forge` is on `PATH` (e.g. inside `nix develop`);
+otherwise the hook is skipped so IDE commits still work. Run
+`nix develop -c forge fmt` before committing `.sol` changes if needed.

@@ -4,11 +4,7 @@ pragma solidity ^0.8.25;
 
 string constant FORK_RPC_URL_BASE = "https://base.gateway.tenderly.co";
 
-/// @dev A recent Base block. DIA demo oracle has BTC/USD data with timestamp
-/// 1744172776 (April 9, 2025). Tests use vm.warp to set block.timestamp
-/// close to the DIA update time so staleness checks pass.
-uint256 constant FORK_BLOCK_BASE = 44515230;
-
-/// @dev The timestamp of the DIA BTC/USD update at the demo oracle.
-/// Tests warp to this + a small offset so staleness checks pass.
-uint256 constant DIA_BTC_USD_TIMESTAMP = 1744172776;
+/// @dev A recent Base block. DIA oracle has AMZN data with timestamp
+/// 1778908932. The fork block timestamp is close enough to that update for
+/// staleness checks without vm.warp.
+uint256 constant FORK_BLOCK_BASE = 46061133;
