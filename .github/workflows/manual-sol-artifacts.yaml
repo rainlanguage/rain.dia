@@ -16,9 +16,6 @@ jobs:
           network=${{ inputs.network }}
           echo "etherscan_api_key_secret_name=CI_DEPLOY_${network^^}_ETHERSCAN_API_KEY" >> $GITHUB_ENV
           echo "rpc_secret_name=CI_DEPLOY_${network^^}_RPC_URL" >> $GITHUB_ENV
-          echo "verify_secret_name=CI_DEPLOY_${network^^}_VERIFY" >> $GITHUB_ENV
-          echo "verifier_secret_name=CI_DEPLOY_${network^^}_VERIFIER" >> $GITHUB_ENV
-          echo "verifier_url_secret_name=CI_DEPLOY_${network^^}_VERIFIER_URL" >> $GITHUB_ENV
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -43,12 +40,22 @@ jobs:
         run: nix develop -c forge soldeer install
       - name: Regenerate meta and pointers
         run: nix develop -c rain-dia-prelude
-      - run: nix develop -c rainix-sol-artifacts
+      # Deploy only. forge script --verify against Etherscan fails for Zoltu
+      # CREATE2 factory CALLs (deployment bytecode mismatch), then rainix
+      # --resume loops hit "No associated wallet". Verify in the next step.
+      - name: Deploy DiaWords
+        run: nix develop -c rainix-sol-artifacts
         env:
           DEPLOY_BROADCAST: '1'
           DEPLOYMENT_KEY: ${{ secrets.PRIVATE_KEY }}
           ETH_RPC_URL: ${{ secrets[env.rpc_secret_name] || vars[env.rpc_secret_name] || '' }}
           ETHERSCAN_API_KEY: ${{ secrets[env.etherscan_api_key_secret_name] || vars[env.etherscan_api_key_secret_name] || ''}}
-          DEPLOY_VERIFY: ${{ secrets[env.verify_secret_name] || vars[env.verify_secret_name] || '' }}
-          DEPLOY_VERIFIER: ${{ secrets[env.verifier_secret_name] || vars[env.verifier_secret_name] || '' }}
-          DEPLOY_VERIFIER_URL: ${{ secrets[env.verifier_url_secret_name] || vars[env.verifier_url_secret_name] || '' }}
+          DEPLOY_VERIFY: ''
+          DEPLOY_VERIFIER: ''
+          DEPLOY_VERIFIER_URL: ''
+      - name: Verify DiaWords
+        run: nix develop -c ./script/verify-dia-words.sh
+        env:
+          ETH_RPC_URL: ${{ secrets[env.rpc_secret_name] || vars[env.rpc_secret_name] || '' }}
+          ETHERSCAN_API_KEY: ${{ secrets[env.etherscan_api_key_secret_name] || vars[env.etherscan_api_key_secret_name] || ''}}
+          VERIFY_CHAIN: ${{ inputs.network }}
