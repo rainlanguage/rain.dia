@@ -20,7 +20,9 @@ abstract contract DiaExtern is BaseRainlangExtern {
         return INTEGRITY_FUNCTION_POINTERS;
     }
 
-    function buildOpcodeFunctionPointers() external pure returns (bytes memory) {
+    /// @notice Builds the packed function pointer table for extern opcodes.
+    /// @return encodedPointers The opcode function pointers, packed as 16-bit values.
+    function buildOpcodeFunctionPointers() external pure returns (bytes memory encodedPointers) {
         function(OperandV2, StackItem[] memory) internal view returns (StackItem[] memory)[] memory fs = new function(OperandV2, StackItem[] memory)
         internal
         view returns (StackItem[] memory)[](OPCODE_FUNCTION_POINTERS_LENGTH);
@@ -33,7 +35,9 @@ abstract contract DiaExtern is BaseRainlangExtern {
         return LibConvert.unsafeTo16BitBytes(pointers);
     }
 
-    function buildIntegrityFunctionPointers() external pure returns (bytes memory) {
+    /// @notice Builds the packed function pointer table for integrity checks.
+    /// @return encodedPointers The integrity function pointers, packed as 16-bit values.
+    function buildIntegrityFunctionPointers() external pure returns (bytes memory encodedPointers) {
         function(OperandV2, uint256, uint256) internal pure returns (uint256, uint256)[] memory fs = new function(OperandV2, uint256, uint256)
         internal
         pure returns (uint256, uint256)[](OPCODE_FUNCTION_POINTERS_LENGTH);

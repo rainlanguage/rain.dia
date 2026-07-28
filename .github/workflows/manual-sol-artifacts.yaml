@@ -8,7 +8,6 @@ on:
         type: choice
         options:
           - base
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,11 +19,9 @@ jobs:
           echo "verify_secret_name=CI_DEPLOY_${network^^}_VERIFY" >> $GITHUB_ENV
           echo "verifier_secret_name=CI_DEPLOY_${network^^}_VERIFIER" >> $GITHUB_ENV
           echo "verifier_url_secret_name=CI_DEPLOY_${network^^}_VERIFIER_URL" >> $GITHUB_ENV
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - uses: nixbuild/nix-quick-install-action@v30
         with:
           nix_conf: |
@@ -41,17 +38,11 @@ jobs:
           # before trying to save a new cache
           # 1G = 1073741824
           gc-max-store-size-linux: 1G
-
-      - run: nix develop -c rainix-sol-prelude
-        working-directory: ./lib/rain.interpreter
-      - run: nix develop -c rainix-rs-prelude
-        working-directory: ./lib/rain.interpreter
-      - run: nix develop -c i9r-prelude
-        working-directory: ./lib/rain.interpreter
-
-      - run: nix develop -c rainix-sol-prelude
-      - run: nix develop -c rain-dia-prelude
-
+      - name: Install soldeer dependencies
+        if: hashFiles('soldeer.lock') != ''
+        run: nix develop -c forge soldeer install
+      - name: Regenerate meta and pointers
+        run: nix develop -c rain-dia-prelude
       - run: nix develop -c rainix-sol-artifacts
         env:
           DEPLOY_BROADCAST: '1'

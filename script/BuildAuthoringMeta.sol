@@ -3,7 +3,7 @@
 pragma solidity =0.8.25;
 
 import {Script} from "forge-std-1.16.1/src/Script.sol";
-import {LibDiaSubParser} from "src/lib/parse/LibDiaSubParser.sol";
+import {LibDiaSubParser} from "../src/lib/parse/LibDiaSubParser.sol";
 
 /// @title DIA subparser Authoring Meta
 /// @notice A script that writes the raw authoring meta out to file so it can be
