@@ -21,13 +21,42 @@ contract LibOpDiaPriceTest is Test {
         assertEq(calculatedOutputs, 2);
     }
 
+    /// Any input count other than the 2 that `integrity` declares reverts with
+    /// the offending length, with no oracle or fork present, so nothing is read
+    /// past the guard.
     function testRunRejectsInvalidInputLength(uint256 inputsLength) external {
-        inputsLength = bound(inputsLength, 0, 3);
+        inputsLength = bound(inputsLength, 0, type(uint8).max);
         vm.assume(inputsLength != 2);
 
         StackItem[] memory inputs = new StackItem[](inputsLength);
         vm.expectRevert(abi.encodeWithSelector(BadDiaPriceInputs.selector, inputsLength));
         this.runExternal(inputs);
+    }
+
+    /// Zero and one input revert on arity alone. The one-input case carries a
+    /// real feed key, so the revert does not depend on the input content.
+    function testRunRejectsZeroAndOneInputs() external {
+        StackItem[] memory zeroInputs = new StackItem[](0);
+        vm.expectRevert(abi.encodeWithSelector(BadDiaPriceInputs.selector, uint256(0)));
+        this.runExternal(zeroInputs);
+
+        StackItem[] memory oneInput = new StackItem[](1);
+        oneInput[0] = StackItem.wrap(bytes32(IntOrAString.unwrap(LibFromStringV3.fromStringV3("AMZN"))));
+        vm.expectRevert(abi.encodeWithSelector(BadDiaPriceInputs.selector, uint256(1)));
+        this.runExternal(oneInput);
+    }
+
+    /// Lengths that share their low byte or low two bytes with the required 2
+    /// are rejected like any other wrong arity; the guard compares the whole
+    /// length rather than a narrowed copy of it.
+    function testRunRejectsInputLengthAliasingTwo() external {
+        uint256[2] memory aliasingLengths = [uint256(2) + (1 << 8), uint256(2) + (1 << 16)];
+
+        for (uint256 i = 0; i < aliasingLengths.length; i++) {
+            StackItem[] memory inputs = new StackItem[](aliasingLengths[i]);
+            vm.expectRevert(abi.encodeWithSelector(BadDiaPriceInputs.selector, aliasingLengths[i]));
+            this.runExternal(inputs);
+        }
     }
 
     function testRunForkCurrentPriceHappy() external {
