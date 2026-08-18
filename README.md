@@ -15,8 +15,9 @@ price updated-at: dia-price("AMZN" 3600);
 
 1. **key** — DIA price feed key as a string, e.g. `"AMZN"`, `"NVDA"`. Passed
    through directly to the DIA oracle contract.
-2. **staleAfter** — Maximum age of the price in seconds. Reverts if the price is
-   older than this.
+2. **staleAfter** — Staleness threshold of the price in seconds. Reverts unless
+   the age of the price is strictly less than this, so a price exactly this old
+   is stale.
 
 ### Outputs
 

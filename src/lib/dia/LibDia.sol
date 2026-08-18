@@ -68,7 +68,9 @@ library LibDia {
     /// stale or zero. The key is passed through as a string directly from the
     /// Rain expression, e.g. "AMZN".
     /// @param feedKey The V3 IntOrAString key for the DIA feed.
-    /// @param staleAfter The maximum age of the price in seconds as a Float.
+    /// @param staleAfter The staleness threshold in seconds as a Float. The
+    /// price is accepted only while its age is strictly less than this, so an
+    /// age exactly equal to it is stale and reverts.
     /// @return price The price as a Float with 18 decimal places.
     /// @return updatedAt The timestamp of the price update as a Float (seconds).
     function getPriceNoOlderThan(IntOrAString feedKey, Float staleAfter)
@@ -91,7 +93,7 @@ library LibDia {
         }
 
         //slither-disable-next-line timestamp
-        if (block.timestamp - rawTimestamp > staleAfterUint) {
+        if (block.timestamp - rawTimestamp >= staleAfterUint) {
             revert StaleDiaPrice(rawTimestamp, staleAfterUint);
         }
 
