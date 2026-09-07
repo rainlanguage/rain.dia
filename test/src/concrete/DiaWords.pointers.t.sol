@@ -18,7 +18,7 @@ import {
     ExternDispatchV2,
     EncodedExternDispatchV2
 } from "rainlang-interface-0.2.8/src/interface/IInterpreterExternV4.sol";
-import {LibExtern} from "rainlang-0.2.0/src/lib/extern/LibExtern.sol";
+import {LibExtern} from "rainlang-0.2.1/src/lib/extern/LibExtern.sol";
 
 contract DiaWordsPointersTest is Test {
     function testBuildOpcodeFunctionPointersMatchesCommittedPointers() external {

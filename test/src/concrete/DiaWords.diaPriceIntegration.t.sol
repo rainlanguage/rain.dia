@@ -2,14 +2,14 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {OpTest} from "rainlang-0.2.0/test/abstract/OpTest.sol";
+import {OpTest} from "rainlang-0.2.1/test/abstract/OpTest.sol";
 import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 import {LibDia} from "../../../src/lib/dia/LibDia.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../lib/LibFork.sol";
 import {StackItem} from "rainlang-interface-0.2.8/src/interface/IInterpreterV4.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {Strings} from "@openzeppelin-contracts-5.6.1/utils/Strings.sol";
-import {LibTestInterpreterDeploy} from "rainlang-0.2.0/test/lib/deploy/LibTestInterpreterDeploy.sol";
+import {LibTestInterpreterDeploy} from "rainlang-0.2.1/test/lib/deploy/LibTestInterpreterDeploy.sol";
 
 /// @notice Full parse→eval integration for `dia-price`. The parser encodes the
 /// `"AMZN"` string literal as a V3 IntOrAString
