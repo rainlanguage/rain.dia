@@ -5,7 +5,7 @@ pragma solidity =0.8.25;
 import {DiaExtern, BaseRainlangExtern} from "../abstract/DiaExtern.sol";
 import {DiaSubParser, BaseRainlangSubParser} from "../abstract/DiaSubParser.sol";
 import {IDescribedByMetaV1} from "rain-metadata-0.1.0/src/interface/IDescribedByMetaV1.sol";
-import {DESCRIBED_BY_META_HASH} from "../generated/DiaWords.pointers.sol";
+import {DESCRIBED_BY_META_HASH} from "../generated/DiaWordsPointers.sol";
 
 contract DiaWords is DiaExtern, DiaSubParser {
     /// @inheritdoc IDescribedByMetaV1

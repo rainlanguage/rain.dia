@@ -2,11 +2,11 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {LibBytes, Pointer} from "rain-solmem-0.1.3/src/lib/LibBytes.sol";
-import {LibParseState, ParseState} from "rainlang-0.1.2/src/lib/parse/LibParseState.sol";
-import {LibParseLiteral} from "rainlang-0.1.2/src/lib/parse/literal/LibParseLiteral.sol";
-import {LibAllStandardOps} from "rainlang-0.1.2/src/lib/op/LibAllStandardOps.sol";
+import {Test} from "forge-std-1.16.2/src/Test.sol";
+import {LibBytes, Pointer} from "rain-solmem-0.1.28/src/lib/LibBytes.sol";
+import {LibParseState, ParseState} from "rainlang-0.2.0/src/lib/parse/LibParseState.sol";
+import {LibParseLiteral} from "rainlang-0.2.0/src/lib/parse/literal/LibParseLiteral.sol";
+import {LibAllStandardOps} from "rainlang-0.2.0/src/lib/op/LibAllStandardOps.sol";
 import {LibIntOrAString, IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 import {LibFromStringV3} from "test/lib/LibFromStringV3.sol";
 

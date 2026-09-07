@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity ^0.8.25;
 
-import {LibRainDeploy} from "rain-deploy-0.1.2/src/lib/LibRainDeploy.sol";
+import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
 
 /// @title LibDiaWordsDeploy
 /// @notice Deterministic DiaWords deployment record for Zoltu CREATE2 deploys.

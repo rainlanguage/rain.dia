@@ -3,17 +3,17 @@
 pragma solidity ^0.8.25;
 
 import {OPCODE_DIA_PRICE} from "./DiaExtern.sol";
-import {OperandV2, BaseRainlangSubParser} from "rainlang-0.1.2/src/abstract/BaseRainlangSubParser.sol";
-import {LibParseOperand} from "rainlang-0.1.2/src/lib/parse/LibParseOperand.sol";
+import {OperandV2, BaseRainlangSubParser} from "rainlang-0.2.0/src/abstract/BaseRainlangSubParser.sol";
+import {LibParseOperand} from "rainlang-0.2.0/src/lib/parse/LibParseOperand.sol";
 import {SUB_PARSER_WORD_PARSERS_LENGTH, SUB_PARSER_WORD_DIA_PRICE} from "../lib/parse/LibDiaSubParser.sol";
 import {LibConvert} from "rain-lib-typecast-0.1.0/src/LibConvert.sol";
-import {LibSubParse} from "rainlang-0.1.2/src/lib/parse/LibSubParse.sol";
-import {IInterpreterExternV4} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterExternV4.sol";
+import {LibSubParse} from "rainlang-0.2.0/src/lib/parse/LibSubParse.sol";
+import {IInterpreterExternV4} from "rainlang-interface-0.2.8/src/interface/IInterpreterExternV4.sol";
 import {
     OPERAND_HANDLER_FUNCTION_POINTERS as SUB_PARSER_OPERAND_HANDLERS,
     PARSE_META as SUB_PARSER_PARSE_META,
     SUB_PARSER_WORD_PARSERS
-} from "../generated/DiaWords.pointers.sol";
+} from "../generated/DiaWordsPointers.sol";
 
 uint8 constant PARSE_META_BUILD_DEPTH = 1;
 

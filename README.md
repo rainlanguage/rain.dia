@@ -54,7 +54,7 @@ the repo dev shell when `forge` and `rain` are not already on `PATH` (e.g.
 rainix copy-artifacts CI). The Nix commands above provide both tools. The script
 writes `meta/DiaSubParserAuthoringMeta.rain.meta`, builds
 `meta/DiaWords.rain.meta`, and finally runs `script/Build.sol` so
-`src/generated/DiaWords.pointers.sol` hashes the final meta.
+`src/generated/DiaWordsPointers.sol` hashes the final meta.
 
 ### Pre-commit
 

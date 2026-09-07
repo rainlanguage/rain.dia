@@ -12,7 +12,7 @@
 - Run `./script/build.sh` for canonical regeneration.
 - Preserve this order: `script/BuildAuthoringMeta.sol` writes the raw authoring
   meta, `rain meta build` writes `meta/DiaWords.rain.meta`, then
-  `script/Build.sol` writes `src/generated/DiaWords.pointers.sol`.
+  `script/Build.sol` writes `src/generated/DiaWordsPointers.sol`.
 - The pipeline runs `script/Build.sol` twice so generated constants and compiled
   bytecode reach a self-consistent fixed point. Require a clean `git diff` after
   regeneration; the generated `DESCRIBED_BY_META_HASH` must equal
