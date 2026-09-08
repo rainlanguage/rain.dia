@@ -81,6 +81,8 @@ contract LibDiaGetPriceTest is Test {
         }
     }
 
+    /// @dev One second past the boundary: age 101 against a threshold of 100 is
+    /// stale.
     function testStalePriceReverts() external {
         vm.warp(1000);
         _mockValue("TEST", 1e18, 899);
@@ -89,16 +91,18 @@ contract LibDiaGetPriceTest is Test {
         this.getPriceNoOlderThanExternal(LibFromStringV3.fromStringV3("TEST"), LibDecimalFloat.packLossless(100, 0));
     }
 
-    function testExactStaleBoundarySucceeds() external {
+    /// @dev Exactly at the boundary: age 100 against a threshold of 100 is
+    /// stale, so equality reverts.
+    function testExactStaleBoundaryReverts() external {
         vm.warp(1000);
         _mockValue("TEST", 1e18, 900);
 
-        (Float price, Float updatedAt) = _getPrice("TEST", 100);
-
-        assertEq(Float.unwrap(price), Float.unwrap(LibDecimalFloat.packLossless(1e18, -18)));
-        assertEq(Float.unwrap(updatedAt), Float.unwrap(LibDecimalFloat.packLossless(900, 0)));
+        vm.expectRevert(abi.encodeWithSelector(StaleDiaPrice.selector, uint128(900), uint256(100)));
+        this.getPriceNoOlderThanExternal(LibFromStringV3.fromStringV3("TEST"), LibDecimalFloat.packLossless(100, 0));
     }
 
+    /// @dev One second inside the boundary: age 99 against a threshold of 100 is
+    /// fresh and returns the price.
     function testJustInsideStaleBoundarySucceeds() external {
         vm.warp(1000);
         _mockValue("TEST", 1e18, 901);
@@ -107,6 +111,16 @@ contract LibDiaGetPriceTest is Test {
 
         assertEq(Float.unwrap(price), Float.unwrap(LibDecimalFloat.packLossless(1e18, -18)));
         assertEq(Float.unwrap(updatedAt), Float.unwrap(LibDecimalFloat.packLossless(901, 0)));
+    }
+
+    /// @dev A zero threshold admits no age at all, including a price stamped in
+    /// the current block.
+    function testZeroStaleAfterRevertsOnCurrentBlockPrice() external {
+        vm.warp(1000);
+        _mockValue("TEST", 1e18, 1000);
+
+        vm.expectRevert(abi.encodeWithSelector(StaleDiaPrice.selector, uint128(1000), uint256(0)));
+        this.getPriceNoOlderThanExternal(LibFromStringV3.fromStringV3("TEST"), LibDecimalFloat.packLossless(0, 0));
     }
 
     function testUnknownKeyRevertsZeroDiaPrice() external {
