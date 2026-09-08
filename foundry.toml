@@ -22,7 +22,7 @@ cbor_metadata = false
 # Intentionally pinned soldeer revisions — bump only after running the full test suite.
 "forge-std" = "1.16.2"
 "@openzeppelin-contracts" = "5.6.1"
-# rainlang 0.1.2: parser emits V3 IntOrAString (see LibParseLiteralDiaKeyTest).
+# rainlang 0.2.1: LibParseLiteralString.parseString emits V3 IntOrAString (LibIntOrAString.fromStringV3), the encoding LibDia decodes; pinned by LibParseLiteralDiaKeyTest.
 "rainlang" = "0.2.1"
 "rain-metadata" = "0.1.0"
 "rain-sol-codegen" = "0.1.36"
