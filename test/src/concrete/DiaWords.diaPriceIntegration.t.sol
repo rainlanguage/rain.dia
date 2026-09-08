@@ -2,14 +2,14 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {OpTest} from "rainlang-0.1.2/test/abstract/OpTest.sol";
+import {OpTest} from "rainlang-0.2.1/test/abstract/OpTest.sol";
 import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 import {LibDia} from "../../../src/lib/dia/LibDia.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../lib/LibFork.sol";
-import {StackItem} from "rain-interpreter-interface-0.1.0/src/interface/IInterpreterV4.sol";
+import {StackItem} from "rainlang-interface-0.2.8/src/interface/IInterpreterV4.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
 import {Strings} from "@openzeppelin-contracts-5.6.1/utils/Strings.sol";
-import {LibInterpreterDeploy} from "rainlang-0.1.2/src/lib/deploy/LibInterpreterDeploy.sol";
+import {LibTestInterpreterDeploy} from "rainlang-0.2.1/test/lib/deploy/LibTestInterpreterDeploy.sol";
 
 /// @notice Full parse→eval integration for `dia-price`. The parser encodes the
 /// `"AMZN"` string literal as a V3 IntOrAString
@@ -20,11 +20,11 @@ contract DiaWordsDiaPriceIntegrationTest is OpTest {
     using Strings for address;
 
     /// Select the Base fork, then (re)etch the rainlang interpreter contracts
-    /// onto the forked state so `OpTest`'s fixed addresses resolve there.
+    /// onto the forked state so `OpTest`'s test addresses resolve there.
     function setUp() external {
         vm.createSelectFork(forkRpcUrlBase(vm), FORK_BLOCK_BASE);
         vm.chainId(LibDia.CHAIN_ID_BASE);
-        LibInterpreterDeploy.etchRainlang(vm);
+        LibTestInterpreterDeploy.etchTestRainlang(vm);
     }
 
     /// Parse and eval `dia-price("AMZN" 3600)` against the pinned Base fork.
