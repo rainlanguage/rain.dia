@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity ^0.8.25;
 
-import {BaseRainlangExtern, OperandV2, StackItem} from "rainlang-0.2.1/src/abstract/BaseRainlangExtern.sol";
+import {BaseRainlangExtern, OperandV2, StackItem} from "rainlang-0.2.6/src/abstract/BaseRainlangExtern.sol";
 import {LibOpDiaPrice} from "../lib/op/LibOpDiaPrice.sol";
-import {LibConvert} from "rain-lib-typecast-0.1.0/src/LibConvert.sol";
+import {LibConvert} from "rain-lib-typecast-0.1.4/src/LibConvert.sol";
 import {OPCODE_FUNCTION_POINTERS, INTEGRITY_FUNCTION_POINTERS} from "../generated/DiaWordsPointers.sol";
 
 uint256 constant OPCODE_DIA_PRICE = 0;

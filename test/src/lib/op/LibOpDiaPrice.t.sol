@@ -7,7 +7,7 @@ import {LibOpDiaPrice, OperandV2, StackItem, BadDiaPriceInputs} from "../../../.
 import {LibDia} from "../../../../src/lib/dia/LibDia.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../../lib/LibFork.sol";
-import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
+import {Float, LibDecimalFloat} from "rain-math-float-0.2.1/src/lib/LibDecimalFloat.sol";
 import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
 
 contract LibOpDiaPriceTest is Test {

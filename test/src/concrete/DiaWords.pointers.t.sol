@@ -12,13 +12,13 @@ import {
     OPERAND_HANDLER_FUNCTION_POINTERS,
     SUB_PARSER_WORD_PARSERS
 } from "../../../src/generated/DiaWordsPointers.sol";
-import {OperandV2, OPCODE_EXTERN} from "rainlang-interface-0.2.8/src/interface/IInterpreterV4.sol";
+import {OperandV2, OPCODE_EXTERN} from "rainlang-interface-0.2.9/src/interface/IInterpreterV4.sol";
 import {
     IInterpreterExternV4,
     ExternDispatchV2,
     EncodedExternDispatchV2
-} from "rainlang-interface-0.2.8/src/interface/IInterpreterExternV4.sol";
-import {LibExtern} from "rainlang-0.2.1/src/lib/extern/LibExtern.sol";
+} from "rainlang-interface-0.2.9/src/interface/IInterpreterExternV4.sol";
+import {LibExtern} from "rainlang-0.2.6/src/lib/extern/LibExtern.sol";
 
 contract DiaWordsPointersTest is Test {
     function testBuildOpcodeFunctionPointersMatchesCommittedPointers() external {

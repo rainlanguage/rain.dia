@@ -6,12 +6,12 @@ import {Test} from "forge-std-1.16.2/src/Test.sol";
 import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../lib/LibFork.sol";
 import {LibDia} from "../../../src/lib/dia/LibDia.sol";
-import {LibDecimalFloat, Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
+import {LibDecimalFloat, Float} from "rain-math-float-0.2.1/src/lib/LibDecimalFloat.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
 import {OPCODE_DIA_PRICE} from "../../../src/abstract/DiaExtern.sol";
 import {LibFromStringV3} from "../../lib/LibFromStringV3.sol";
-import {OperandV2, StackItem} from "rainlang-interface-0.2.8/src/interface/IInterpreterV4.sol";
-import {LibExtern, ExternDispatchV2} from "rainlang-0.2.1/src/lib/extern/LibExtern.sol";
+import {OperandV2, StackItem} from "rainlang-interface-0.2.9/src/interface/IInterpreterV4.sol";
+import {LibExtern, ExternDispatchV2} from "rainlang-0.2.6/src/lib/extern/LibExtern.sol";
 
 /// @notice Tests DiaWords extern dispatch directly (bypassing the parser).
 /// This verifies the extern contract works correctly with V3-encoded inputs.
