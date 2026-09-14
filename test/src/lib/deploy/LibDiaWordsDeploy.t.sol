@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.16.2/src/Test.sol";
 import {DiaWords} from "src/concrete/DiaWords.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
+import {LibRainDeploy} from "rain-deploy-0.1.10/src/lib/LibRainDeploy.sol";
 import {LibDiaWordsDeploy} from "src/lib/deploy/LibDiaWordsDeploy.sol";
 
 contract LibDiaWordsDeployTest is Test {

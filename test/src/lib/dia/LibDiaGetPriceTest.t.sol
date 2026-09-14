@@ -11,7 +11,7 @@ import {
     InvalidDiaTimestamp
 } from "../../../../src/lib/dia/LibDia.sol";
 import {IDIAOracleV2} from "../../../../src/lib/dia/IDIAOracleV2.sol";
-import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
+import {Float, LibDecimalFloat} from "rain-math-float-0.2.1/src/lib/LibDecimalFloat.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../../lib/LibFork.sol";
 import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
 import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";

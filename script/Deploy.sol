@@ -4,9 +4,9 @@ pragma solidity =0.8.25;
 
 import {Script} from "forge-std-1.16.2/src/Script.sol";
 import {DiaWords} from "../src/concrete/DiaWords.sol";
-import {IMetaBoardV1_2} from "rain-metadata-0.1.0/src/interface/unstable/IMetaBoardV1_2.sol";
-import {LibDescribedByMeta} from "rain-metadata-0.1.0/src/lib/LibDescribedByMeta.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.7/src/lib/LibRainDeploy.sol";
+import {IMetaBoardV1_2} from "rain-metadata-0.1.7/src/interface/unstable/IMetaBoardV1_2.sol";
+import {LibDescribedByMeta} from "rain-metadata-0.1.7/src/lib/LibDescribedByMeta.sol";
+import {LibRainDeploy} from "rain-deploy-0.1.10/src/lib/LibRainDeploy.sol";
 import {LibDiaWordsDeploy} from "../src/lib/deploy/LibDiaWordsDeploy.sol";
 
 /// @dev Deterministic MetaBoard address deployed via Zoltu factory.
