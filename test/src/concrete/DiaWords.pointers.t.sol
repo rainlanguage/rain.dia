@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std-1.16.2/src/Test.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 import {OPCODE_DIA_PRICE, OPCODE_FUNCTION_POINTERS_LENGTH} from "../../../src/abstract/DiaExtern.sol";
 import {SUB_PARSER_WORD_DIA_PRICE, SUB_PARSER_WORD_PARSERS_LENGTH} from "../../../src/lib/parse/LibDiaSubParser.sol";
@@ -12,13 +12,13 @@ import {
     OPERAND_HANDLER_FUNCTION_POINTERS,
     SUB_PARSER_WORD_PARSERS
 } from "../../../src/generated/DiaWordsPointers.sol";
-import {OperandV2, OPCODE_EXTERN} from "rainlang-interface-0.2.9/src/interface/IInterpreterV4.sol";
+import {OperandV2, OPCODE_EXTERN} from "rainlang-interface-0.2.13/src/interface/IInterpreterV4.sol";
 import {
     IInterpreterExternV4,
     ExternDispatchV2,
     EncodedExternDispatchV2
-} from "rainlang-interface-0.2.9/src/interface/IInterpreterExternV4.sol";
-import {LibExtern} from "rainlang-0.2.6/src/lib/extern/LibExtern.sol";
+} from "rainlang-interface-0.2.13/src/interface/IInterpreterExternV4.sol";
+import {LibExtern} from "rainlang-0.2.13/src/lib/extern/LibExtern.sol";
 
 contract DiaWordsPointersTest is Test {
     function testBuildOpcodeFunctionPointersMatchesCommittedPointers() external {
