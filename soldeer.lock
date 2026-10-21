@@ -14,10 +14,10 @@ integrity = "fa706c8a7caf3426c90f75e6aafa3224b0a6c899b490800cf6944e4ec42f9344"
 
 [[dependencies]]
 name = "rain-deploy"
-version = "0.1.18"
-url = "https://soldeer-revisions.s3.amazonaws.com/rain-deploy/0_1_18_13-10-2026_22:18:03_rain.zip"
-checksum = "8da7a39284a83de22900959bcbba881307d60d9f15d6c587d970152c71e2fdef"
-integrity = "27b4b7adcea7ff8d1a09b93e3b8a00e8cffe1bc0cf4df4c22dab115f9552301f"
+version = "0.1.19"
+url = "https://soldeer-revisions.s3.amazonaws.com/rain-deploy/0_1_19_21-10-2026_18:48:30_rain.zip"
+checksum = "027b4539b5b84a162ba91e7601f5dc31bfc1c68a990e9da7a8bede3832b970b2"
+integrity = "d11c1add6b62ac998bdc7e6a2db4f8501ec90ac3791f8d90dc4789410dd8bb36"
 
 [[dependencies]]
 name = "rain-extrospection"
@@ -69,6 +69,13 @@ checksum = "81e6c67cc0e2c573784f1c03e70db1ea9537e8161065ded0aaf90bc11b6b6150"
 integrity = "f1509e5fa3a4182b625f4650fb368fe605f76ffcaeaa6fbbf1159346b69f2809"
 
 [[dependencies]]
+name = "rain-math-float-deploy"
+version = "0.1.5"
+url = "https://soldeer-revisions.s3.amazonaws.com/rain-math-float-deploy/0_1_5_21-10-2026_09:10:57_rain.math.float.zip"
+checksum = "614dac632e19c28043732f0672357eb3c3d515b63f6f73971c5e3c8c20bda178"
+integrity = "a9f57b86d5aafe6086b4b406f00bf61fdbce6616a4edf107e628c6695eb955d7"
+
+[[dependencies]]
 name = "rain-metadata"
 version = "0.1.43"
 url = "https://soldeer-revisions.s3.amazonaws.com/rain-metadata/0_1_43_03-09-2026_09:14:04_rain.zip"
@@ -105,10 +112,10 @@ integrity = "f10dc50978061fb2a92fb9ba907c2cbe678d24198faabf060f699d36f1e8e4a0"
 
 [[dependencies]]
 name = "rainlang"
-version = "0.2.13"
-url = "https://soldeer-revisions.s3.amazonaws.com/rainlang/0_2_13_20-10-2026_16:58:23_rainlang.zip"
-checksum = "207b317a581b8194d75b96164dfaa810e438c508c39e32af1d929c1521c48be4"
-integrity = "334ca68fdf6177e9f2e4872885e3b44711b040f41fd045d109b3699cadec6ddb"
+version = "0.2.14"
+url = "https://soldeer-revisions.s3.amazonaws.com/rainlang/0_2_14_21-10-2026_09:44:00_rainlang.zip"
+checksum = "dd4171d759f6fbecc4544a0381c746503be4876d8a0521781b2183a4a2072dde"
+integrity = "dd98718d94753504439a1c9a17f9053768854e59e22cf75ea6140edea5d78079"
 
 [[dependencies]]
 name = "rainlang-interface"
