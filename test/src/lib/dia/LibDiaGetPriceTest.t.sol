@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std-1.16.1/src/Test.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {
     LibDia,
     StaleDiaPrice,
@@ -11,10 +11,10 @@ import {
     InvalidDiaTimestamp
 } from "../../../../src/lib/dia/LibDia.sol";
 import {IDIAOracleV2} from "../../../../src/lib/dia/IDIAOracleV2.sol";
-import {Float, LibDecimalFloat} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
+import {Float, LibDecimalFloat} from "rain-math-float-0.3.10/src/lib/LibDecimalFloat.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../../lib/LibFork.sol";
 import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
-import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
+import {IntOrAString} from "rain-intorastring-0.1.4/src/lib/LibIntOrAString.sol";
 
 /// @dev Hardcoded prices are pinned to a Base fork snapshot (see comments on each test).
 /// Oracle: 0xCE521b52513242c5094bc56f57887BB2A05B8129 (LibDia.ORACLE_BASE).
@@ -29,8 +29,8 @@ contract LibDiaGetPriceTest is Test {
         vm.chainId(LibDia.CHAIN_ID_BASE);
     }
 
-    /// @dev Asserts getValue(key) raw price at the fork block matches `rawPrice` (18-decimal uint128).
-    function _assertFeedPrice(string memory symbol, uint256 rawPrice) internal view {
+    /// @dev Asserts getValue(key) raw price at the fork block matches `rawPrice` (18 decimals).
+    function _assertFeedPrice(string memory symbol, int256 rawPrice) internal view {
         Float staleAfter = LibDecimalFloat.packLossless(3600, 0);
 
         (Float price, Float updatedAt) = LibDia.getPriceNoOlderThan(LibFromStringV3.fromStringV3(symbol), staleAfter);
@@ -39,7 +39,7 @@ contract LibDiaGetPriceTest is Test {
         assertTrue(Float.unwrap(updatedAt) != 0, "timestamp should be non-zero");
         assertEq(
             Float.unwrap(price),
-            Float.unwrap(LibDecimalFloat.packLossless(int256(rawPrice), -18)),
+            Float.unwrap(LibDecimalFloat.packLossless(rawPrice, -18)),
             string.concat("unexpected ", symbol, " price")
         );
     }
@@ -60,16 +60,15 @@ contract LibDiaGetPriceTest is Test {
         );
     }
 
-    function _getPrice(string memory key, uint256 staleAfter) internal view returns (Float price, Float updatedAt) {
-        return LibDia.getPriceNoOlderThan(
-            LibFromStringV3.fromStringV3(key), LibDecimalFloat.packLossless(int256(staleAfter), 0)
-        );
+    function _getPrice(string memory key, int256 staleAfter) internal view returns (Float price, Float updatedAt) {
+        return
+            LibDia.getPriceNoOlderThan(LibFromStringV3.fromStringV3(key), LibDecimalFloat.packLossless(staleAfter, 0));
     }
 
     function testGetPrices() external view {
         string[5] memory symbols = ["AMZN", "NVDA", "COIN", "MSTR", "TSLA"];
-        uint256[5] memory rawPrices = [
-            uint256(238650000000000005680),
+        int256[5] memory rawPrices = [
+            int256(238650000000000005680),
             208969999999999998864,
             159810000000000002272,
             124269999999999996024,

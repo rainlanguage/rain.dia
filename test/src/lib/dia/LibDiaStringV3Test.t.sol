@@ -2,10 +2,10 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std-1.16.1/src/Test.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {LibDia, InvalidDiaString} from "../../../../src/lib/dia/LibDia.sol";
 import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
-import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
+import {IntOrAString} from "rain-intorastring-0.1.4/src/lib/LibIntOrAString.sol";
 
 contract LibDiaStringV3Test is Test {
     function intOrAStringToStringExternal(IntOrAString value) external pure returns (string memory) {
@@ -44,6 +44,7 @@ contract LibDiaStringV3Test is Test {
     function testRejectsNonCanonicalStringEncoding() external {
         IntOrAString canonical = LibFromStringV3.fromStringV3("AMZN");
         uint256 length = IntOrAString.unwrap(canonical) & 0x1f;
+        // forge-lint: disable-next-line(incorrect-shift)
         IntOrAString nonCanonical = IntOrAString.wrap(IntOrAString.unwrap(canonical) | (1 << (8 + length * 8)));
 
         vm.expectRevert(abi.encodeWithSelector(InvalidDiaString.selector, nonCanonical));

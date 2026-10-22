@@ -2,11 +2,11 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Script} from "forge-std-1.16.1/src/Script.sol";
+import {Script} from "forge-std-1.17.0/src/Script.sol";
 import {DiaWords} from "../src/concrete/DiaWords.sol";
-import {IMetaBoardV1_2} from "rain-metadata-0.1.0/src/interface/unstable/IMetaBoardV1_2.sol";
-import {LibDescribedByMeta} from "rain-metadata-0.1.0/src/lib/LibDescribedByMeta.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.2/src/lib/LibRainDeploy.sol";
+import {IMetaBoardV1_2} from "rain-metadata-0.1.43/src/interface/unstable/IMetaBoardV1_2.sol";
+import {LibDescribedByMeta} from "rain-metadata-0.1.43/src/lib/LibDescribedByMeta.sol";
+import {LibRainDeploy} from "rain-deploy-0.1.19/src/lib/LibRainDeploy.sol";
 import {LibDiaWordsDeploy} from "../src/lib/deploy/LibDiaWordsDeploy.sol";
 
 /// @dev Deterministic MetaBoard address deployed via Zoltu factory.

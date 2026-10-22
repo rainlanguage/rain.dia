@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: Copyright (c) 2020 Rain Open Source Software Ltd
 pragma solidity =0.8.25;
 
-import {Test} from "forge-std-1.16.1/src/Test.sol";
-import {AuthoringMetaV2} from "rain-interpreter-interface-0.1.0/src/interface/IParserV2.sol";
+import {Test} from "forge-std-1.17.0/src/Test.sol";
+import {AuthoringMetaV2} from "rainlang-interface-0.2.13/src/interface/IParserV2.sol";
 import {LibDiaSubParser} from "../../../../src/lib/parse/LibDiaSubParser.sol";
 
 contract LibDiaSubParserAuthoringMetaTest is Test {
@@ -12,7 +12,8 @@ contract LibDiaSubParserAuthoringMetaTest is Test {
         AuthoringMetaV2[] memory authoringMeta = abi.decode(encodedAuthoringMeta, (AuthoringMetaV2[]));
 
         assertEq(authoringMeta.length, 1);
-        assertEq(authoringMeta[0].word, bytes32("dia-price"));
+        bytes32 expectedWord = "dia-price";
+        assertEq(authoringMeta[0].word, expectedWord);
         assertTrue(bytes(authoringMeta[0].description).length > 0);
         assertEq(
             authoringMeta[0].description,

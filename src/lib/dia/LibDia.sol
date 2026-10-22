@@ -3,8 +3,8 @@
 pragma solidity ^0.8.25;
 
 import {IDIAOracleV2} from "./IDIAOracleV2.sol";
-import {LibDecimalFloat, Float} from "rain-math-float-0.1.1/src/lib/LibDecimalFloat.sol";
-import {IntOrAString} from "rain-intorastring-0.1.0/src/lib/LibIntOrAString.sol";
+import {LibDecimalFloat, Float} from "rain-math-float-0.3.10/src/lib/LibDecimalFloat.sol";
+import {IntOrAString} from "rain-intorastring-0.1.4/src/lib/LibIntOrAString.sol";
 
 error UnsupportedChainId();
 error StaleDiaPrice(uint128 timestamp, uint256 staleAfter);
@@ -86,14 +86,17 @@ library LibDia {
             revert ZeroDiaPrice(key);
         }
 
+        // forge-lint: disable-next-line(block-timestamp)
         if (rawTimestamp == 0 || rawTimestamp > block.timestamp) {
             revert InvalidDiaTimestamp(rawTimestamp);
         }
 
-        //slither-disable-next-line timestamp
+        // slither-disable-start timestamp
+        // forge-lint: disable-next-line(block-timestamp)
         if (block.timestamp - rawTimestamp > staleAfterUint) {
             revert StaleDiaPrice(rawTimestamp, staleAfterUint);
         }
+        // slither-disable-end timestamp
 
         price = LibDecimalFloat.packLossless(int256(uint256(rawPrice)), DIA_DECIMALS);
         updatedAt = LibDecimalFloat.packLossless(int256(uint256(rawTimestamp)), 0);
