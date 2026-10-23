@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {Deploy, METABOARD_ADDRESS} from "../../script/Deploy.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.21/src/lib/LibRainDeploy.sol";
+import {LibRainDeploy} from "rain-deploy-0.1.22/src/lib/LibRainDeploy.sol";
 import {LibDiaWordsDeploy} from "../../src/lib/deploy/LibDiaWordsDeploy.sol";
 import {UnexpectedAddressDeploy} from "./UnexpectedAddressDeploy.sol";
 
