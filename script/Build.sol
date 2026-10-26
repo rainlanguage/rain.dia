@@ -6,7 +6,7 @@ import {Script} from "forge-std-1.17.0/src/Script.sol";
 import {DiaWords} from "../src/concrete/DiaWords.sol";
 import {LibFs} from "rain-sol-codegen-0.1.39/src/lib/LibFs.sol";
 import {LibCodeGen} from "rain-sol-codegen-0.1.39/src/lib/LibCodeGen.sol";
-import {LibGenParseMeta} from "rainlang-0.2.27/src/lib/codegen/LibGenParseMeta.sol";
+import {LibGenParseMeta} from "rainlang-0.2.28/src/lib/codegen/LibGenParseMeta.sol";
 import {LibDiaSubParser} from "../src/lib/parse/LibDiaSubParser.sol";
 import {PARSE_META_BUILD_DEPTH} from "../src/abstract/DiaSubParser.sol";
 
