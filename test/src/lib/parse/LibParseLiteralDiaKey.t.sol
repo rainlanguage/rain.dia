@@ -4,9 +4,9 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {LibBytes, Pointer} from "rain-solmem-0.1.28/src/lib/LibBytes.sol";
-import {LibParseState, ParseState} from "rainlang-0.2.19/src/lib/parse/LibParseState.sol";
-import {LibParseLiteral} from "rainlang-0.2.19/src/lib/parse/literal/LibParseLiteral.sol";
-import {LibAllStandardOps} from "rainlang-0.2.19/src/lib/op/LibAllStandardOps.sol";
+import {LibParseState, ParseState} from "rainlang-0.2.27/src/lib/parse/LibParseState.sol";
+import {LibParseLiteral} from "rainlang-0.2.27/src/lib/parse/literal/LibParseLiteral.sol";
+import {LibAllStandardOps} from "rainlang-0.2.27/src/lib/op/LibAllStandardOps.sol";
 import {LibIntOrAString, IntOrAString} from "rain-intorastring-0.1.4/src/lib/LibIntOrAString.sol";
 import {LibFromStringV3} from "test/lib/LibFromStringV3.sol";
 
