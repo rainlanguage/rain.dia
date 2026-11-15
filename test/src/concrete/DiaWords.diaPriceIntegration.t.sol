@@ -7,7 +7,7 @@ import {DiaWords} from "../../../src/concrete/DiaWords.sol";
 import {LibDia} from "../../../src/lib/dia/LibDia.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../lib/LibFork.sol";
 import {StackItem} from "rainlang-0.2.35/src/interface/IInterpreterV4.sol";
-import {Float, LibDecimalFloat} from "rain-math-float-0.3.12/src/lib/LibDecimalFloat.sol";
+import {Float, LibDecimalFloat} from "rain-math-float-0.3.11/src/lib/LibDecimalFloat.sol";
 import {Strings} from "@openzeppelin-contracts-5.7.0/utils/Strings.sol";
 import {LibTestInterpreterDeploy} from "rainlang-0.2.35/test/lib/deploy/LibTestInterpreterDeploy.sol";
 
