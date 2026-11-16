@@ -6,7 +6,7 @@ import {Script} from "forge-std-1.17.0/src/Script.sol";
 import {DiaWords} from "../src/concrete/DiaWords.sol";
 import {IMetaBoardV1_2} from "rain-metadata-0.1.46/src/interface/unstable/IMetaBoardV1_2.sol";
 import {LibDescribedByMeta} from "rain-metadata-0.1.46/src/lib/LibDescribedByMeta.sol";
-import {LibRainDeploy} from "rain-deploy-0.1.32/src/lib/LibRainDeploy.sol";
+import {LibRainDeploy} from "rain-deploy-0.1.33/src/lib/LibRainDeploy.sol";
 import {LibDiaWordsDeploy} from "../src/lib/deploy/LibDiaWordsDeploy.sol";
 
 /// @dev Deterministic MetaBoard address deployed via Zoltu factory.
