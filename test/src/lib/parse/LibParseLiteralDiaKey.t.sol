@@ -4,10 +4,10 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std-1.17.0/src/Test.sol";
 import {LibBytes, Pointer} from "rain-solmem-0.1.28/src/lib/LibBytes.sol";
-import {LibParseState, ParseState} from "rainlang-0.2.37/src/lib/parse/LibParseState.sol";
-import {LibParseLiteral} from "rainlang-0.2.37/src/lib/parse/literal/LibParseLiteral.sol";
-import {LibAllStandardOps} from "rainlang-0.2.37/src/lib/op/LibAllStandardOps.sol";
-import {LibIntOrAString, IntOrAString} from "rain-intorastring-0.1.4/src/lib/LibIntOrAString.sol";
+import {LibParseState, ParseState} from "rainlang-0.2.39/src/lib/parse/LibParseState.sol";
+import {LibParseLiteral} from "rainlang-0.2.39/src/lib/parse/literal/LibParseLiteral.sol";
+import {LibAllStandardOps} from "rainlang-0.2.39/src/lib/op/LibAllStandardOps.sol";
+import {LibIntOrAString, IntOrAString} from "rain-intorastring-0.1.5/src/lib/LibIntOrAString.sol";
 import {LibFromStringV3} from "test/lib/LibFromStringV3.sol";
 
 /// @dev Pins rainlang parser string literals to the V3 IntOrAString encoding DiaWords consumes.
