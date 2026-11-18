@@ -14,7 +14,7 @@ import {IDIAOracleV2} from "../../../../src/lib/dia/IDIAOracleV2.sol";
 import {Float, LibDecimalFloat} from "rain-math-float-0.3.13/src/lib/LibDecimalFloat.sol";
 import {FORK_BLOCK_BASE, forkRpcUrlBase} from "../../../lib/LibFork.sol";
 import {LibFromStringV3} from "../../../lib/LibFromStringV3.sol";
-import {IntOrAString} from "rain-intorastring-0.1.4/src/lib/LibIntOrAString.sol";
+import {IntOrAString} from "rain-intorastring-0.1.5/src/lib/LibIntOrAString.sol";
 
 /// @dev Hardcoded prices are pinned to a Base fork snapshot (see comments on each test).
 /// Oracle: 0xCE521b52513242c5094bc56f57887BB2A05B8129 (LibDia.ORACLE_BASE).
